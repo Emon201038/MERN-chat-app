@@ -1,0 +1,43 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "this a chat app for practise socket.io and rtk query",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.6.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.6",
+    "otp-generator": "^4.0.1",
+    "socket.io": "^4.7.2",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emon201038/chat-app-server.git"
+  },
+  "author": "Emon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Emon201038/chat-app-server/issues"
+  },
+  "homepage": "https://github.com/Emon201038/chat-app-server#readme",
+  "prefix": "http://localhost:5173"
+}
