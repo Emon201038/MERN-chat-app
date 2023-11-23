@@ -1,11 +1,14 @@
 import { EmojiEmotions, MoreVert } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 // import { socket } from "../../layout/Inbox";
 /*eslint-disable react/prop-types */
-const Message = ({ msg, user, selectedFriend }) => {
+const Message = ({ msg }) => {
   const [iconShow, setIconShow] = useState(false);
   const scrollRef = useRef();
+  const { selectedFriend } = useSelector((state) => state.friend);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });

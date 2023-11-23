@@ -19,8 +19,21 @@ const OnlinePeople = ({ onlineUser }) => {
     );
     setFriendsId(friendArray);
   }, [onlineUser, loggedInUser]);
+  const skip = () => {
+    if (friendsArray !== undefined) {
+      if (friendsArray.length > 0) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  };
+
   const { data: onlineFriends } = useGetFriendByIdQuery(
-    friendsArray?.join(",")
+    friendsArray?.join(","),
+    {
+      skip: !skip(friendsArray),
+    }
   );
 
   const StyledBadge = styled(Badge)(({ theme }) => ({

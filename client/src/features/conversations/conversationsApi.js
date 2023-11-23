@@ -8,10 +8,7 @@ export const conversationSlice = apiSlice.injectEndpoints({
         url: `/api/conversation`,
         method: "GET",
       }),
-      async onCacheEntryAdded(
-        arg,
-        { cacheDataLoaded, updateCachedData, cacheEntryRemoved }
-      ) {
+      async onCacheEntryAdded(arg, { cacheDataLoaded, updateCachedData }) {
         await cacheDataLoaded;
         if (socket) {
           socket?.on("getMessage", (data) => {
@@ -30,6 +27,23 @@ export const conversationSlice = apiSlice.injectEndpoints({
         url: `/api/conversation/message/${data}`,
         method: "GET",
       }),
+      async onCacheEntryAdded(arg, { cacheDataLoaded, updateCachedData }) {
+        await cacheDataLoaded;
+        if (socket) {
+          socket?.on("getMessage", (data) => {
+            updateCachedData((draft) => {
+              draft?.payload?.messages?.push({
+                conversationId: data.conversationId,
+                sender: data.senderId,
+                receiver: data.receiverId,
+                text: data.text,
+                createdAt: data.createdAt,
+                _id: data.createdAt,
+              });
+            });
+          });
+        }
+      },
     }),
     sentMessage: builder.mutation({
       query: (formData) => ({
@@ -39,7 +53,6 @@ export const conversationSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        console.log(arg);
         const cnv = dispatch(
           apiSlice.util.updateQueryData(
             "getConversations",
@@ -53,21 +66,28 @@ export const conversationSlice = apiSlice.injectEndpoints({
           )
         );
 
+        const msg = dispatch(
+          apiSlice.util.updateQueryData(
+            "getMessages",
+            arg.conversationId,
+            (draft) => {
+              draft?.payload?.messages?.push({
+                conversationId: arg?.conversationId,
+                sender: arg?.sender,
+                receiver: arg?.receiverId,
+                createdAt: arg?.createdAt,
+                text: arg?.text,
+                _id: arg?.createdAt,
+              });
+            }
+          )
+        );
+
         try {
-          const res = await queryFulfilled;
-          const message = res.data.payload.message;
-          dispatch(
-            apiSlice.util.updateQueryData(
-              "getMessages",
-              arg.conversationId,
-              (draft) => {
-                // console.log(draft)
-                draft?.payload?.messages?.push(message);
-              }
-            )
-          );
+          await queryFulfilled;
         } catch (error) {
           cnv.undo();
+          msg.undo();
         }
       },
     }),

@@ -1,26 +1,21 @@
 import { useSelector } from "react-redux";
 import {
-  useGetMessagesQuery,
   // useGetMessagesQuery,
   useSentMessageMutation,
 } from "../features/conversations/conversationsApi";
 import { useEffect, useState } from "react";
 import ConversationForm from "../components/forms/ConversationForm";
 import Head from "../components/conversation/Head";
-import Message from "../components/conversation/Message";
-import { SimpleBarStyle } from "../components/Scrollbar";
+import Messages from "../components/conversation/Messages";
 
 /*eslint-disable react/prop-types */
-const Conversation = ({ socket, arrivalMessage }) => {
+const Conversation = ({ request, socket, arrivalMessage }) => {
   const [message, setMessage] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   const { selectedConversation } = useSelector((state) => state.conversation);
   const { selectedFriend } = useSelector((state) => state.friend);
   const { user } = useSelector((state) => state.auth);
-
-  const { data } = useGetMessagesQuery(selectedConversation);
-  console.log(data);
 
   const [sentMessage, { isLoading }] = useSentMessageMutation();
 
@@ -44,7 +39,9 @@ const Conversation = ({ socket, arrivalMessage }) => {
         console.log(error);
       }
     };
-    getMessage();
+    if (selectedConversation) {
+      getMessage();
+    }
   }, [selectedConversation]);
 
   const handleSentMessage = async (e) => {
@@ -100,22 +97,8 @@ const Conversation = ({ socket, arrivalMessage }) => {
       <div className="conversations w-full h-full bg-white">
         <div className="wrapper w-full h-full flex flex-col">
           <Head selectedFriend={selectedFriend} />
-          <div className="conversations-container h-full relative   overflow-scroll">
-            <SimpleBarStyle timeout={500} autoHide={500}>
-              <ul className="flex flex-col  h-full justify-end">
-                {message?.map((msg) => {
-                  return (
-                    <Message
-                      key={msg?.createdAt}
-                      msg={msg}
-                      user={user}
-                      selectedFriend={selectedFriend}
-                    />
-                  );
-                })}
-              </ul>
-            </SimpleBarStyle>
-          </div>
+          <Messages skip={request} />
+
           <ConversationForm
             inputValue={inputValue}
             setInputValue={setInputValue}
