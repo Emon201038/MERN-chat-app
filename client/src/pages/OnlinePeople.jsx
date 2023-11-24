@@ -6,19 +6,27 @@ import {
 import { useEffect, useState } from "react";
 import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { socket } from "../socket";
 
 /* eslint-disable react/prop-types */
-const OnlinePeople = ({ onlineUser }) => {
+const OnlinePeople = () => {
   const { user: thisUser } = useSelector((state) => state.auth);
   const { data: loggedInUser } = useGetUserByIdQuery(thisUser?._id);
   const [friendsArray, setFriendsId] = useState([]);
+  const [onlineUser, setOnlineUser] = useState([]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on("getUsers", (user) => setOnlineUser(user));
+    }
+  }, [loggedInUser]);
   useEffect(() => {
     const friendArray = loggedInUser?.payload?.user?.friends.filter((f) =>
       onlineUser.some((u) => u.userId === f)
     );
     setFriendsId(friendArray);
   }, [onlineUser, loggedInUser]);
+
   const skip = () => {
     if (friendsArray !== undefined) {
       if (friendsArray.length > 0) {

@@ -58,6 +58,9 @@ function Inbox() {
       });
     });
     socket.current?.on("pre", (data) => console.log(data));
+    return () => {
+      socket.current.disconnect();
+    };
   }, [loggedInUser, dispatch]);
 
   useEffect(() => {

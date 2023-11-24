@@ -1,3 +1,4 @@
+import { socket } from "../../socket";
 import { apiSlice } from "../api/apiSlice";
 
 export const ContactSlice = apiSlice.injectEndpoints({
@@ -19,6 +20,25 @@ export const ContactSlice = apiSlice.injectEndpoints({
         url: `/api/friends/getFriends?friendsId=${data}`,
         method: "GET",
       }),
+      async onCacheEntryAdded(
+        arg,
+        { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
+      ) {
+        await cacheDataLoaded;
+        if (socket) {
+          socket?.on("getUsers", (data) => {
+            updateCachedData((draft) => {
+              const usersId = data.map((u) => u?.userId);
+              const filteredUsers = draft?.payload?.user.filter((user) =>
+                usersId.includes(user._id)
+              );
+
+              draft.payload.user = filteredUsers;
+              console.log(JSON.stringify(draft));
+            });
+          });
+        }
+      },
     }),
     getUserById: builder.query({
       query: (data) => ({

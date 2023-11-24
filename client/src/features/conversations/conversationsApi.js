@@ -4,7 +4,7 @@ import { apiSlice } from "../api/apiSlice";
 export const conversationSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getConversations: builder.query({
-      query: () => ({
+      query: (id) => ({
         url: `/api/conversation`,
         method: "GET",
       }),
@@ -17,6 +17,24 @@ export const conversationSlice = apiSlice.injectEndpoints({
                 (c) => c._id == data.conversationId
               );
               targetConversation.lastMessage = data;
+            });
+          });
+        }
+
+        if (socket) {
+          socket?.on("getUsers", (users) => {
+            updateCachedData((draft) => {
+              draft?.payload?.conversation.forEach((conversation) => {
+                const matchedUser = conversation?.participients?.find((u) => {
+                  return (
+                    u._id !== arg && users.some((usr) => usr.userId == u._id)
+                  );
+                });
+                if (matchedUser) {
+                  matchedUser.status = "online";
+                }
+              });
+              socket?.on("offlineUser", (data) => console.log(data));
             });
           });
         }
@@ -99,3 +117,9 @@ export const {
   useGetMessagesQuery,
   useSentMessageMutation,
 } = conversationSlice;
+
+// apiResponse.payload.conversation.forEach((conversation) => {
+//   const matchedUser = conversation.participients.find((participant) => {users.find((user) => user.userId === participant._id);
+
+//   });
+// });

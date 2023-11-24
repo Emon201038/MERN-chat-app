@@ -24,6 +24,7 @@ server.listen(port, async (req) => {
   await db();
 });
 let users = [];
+let connectedUserOffline = [];
 const addUser = (userId, socketId) => {
   !users.some((usr) => usr.userId === userId) &&
     users.push({ userId, socketId });
@@ -31,6 +32,21 @@ const addUser = (userId, socketId) => {
 
 const removeUser = (socketId) => {
   users = users.filter((user) => socketId !== user.socketId);
+};
+const addOfflineUser = (socketId) => {
+  const user = users.find((u) => u.socketId === socketId);
+  const logic = !connectedUserOffline.some(
+    (usr) => usr?.userId === user?.userId
+  );
+  if (logic) {
+    connectedUserOffline.push(user);
+  }
+};
+
+const removeOfflineUser = (userId) => {
+  connectedUserOffline = connectedUserOffline.filter(
+    (u) => u?.userId !== userId
+  );
 };
 
 const getUser = (userId) => {
@@ -44,6 +60,7 @@ io.on("connection", async (socket) => {
   if (user_id) {
     console.log("new user is online. his socket_id: " + socket_id);
     addUser(user_id, socket_id);
+    removeOfflineUser(user_id);
   }
   socket.on("userId", async (id) => {
     await User.findByIdAndUpdate(user_id, {
@@ -51,7 +68,9 @@ io.on("connection", async (socket) => {
       status: "online",
     });
     io.emit("getUsers", users);
+    io.emit("offlineUser", connectedUserOffline);
     console.log(users);
+    console.log(connectedUserOffline, "offline user");
     const conversation = await Conversations.find({
       participients: { $in: [user_id] },
     }).populate("participients", "-password");
@@ -92,8 +111,11 @@ io.on("connection", async (socket) => {
       status: "offline",
     });
     // socket.disconnect(0);
+    addOfflineUser(socket.id);
     removeUser(socket.id);
     io.emit("getUsers", users);
+    io.emit("offlineUser", connectedUserOffline);
+    console.log(connectedUserOffline, "offline user");
     console.log(users);
   });
 });

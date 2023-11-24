@@ -19,7 +19,7 @@ const Contacts = ({
   const authParsed = JSON.parse(auth);
   const user = authParsed.user;
 
-  const { data } = useGetConversationsQuery();
+  const { data } = useGetConversationsQuery(user._id);
 
   useEffect(() => {
     setConversations(data?.payload?.conversation);
