@@ -4,22 +4,33 @@ import {
   useGetUserByIdQuery,
 } from "../features/friends/friendsApi";
 import { useEffect, useState } from "react";
-import { Avatar, Badge, Typography } from "@mui/material";
+import { Alert, Avatar, Badge, Box, Skeleton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { socket } from "../socket";
 
 /* eslint-disable react/prop-types */
 const OnlinePeople = () => {
   const { user: thisUser } = useSelector((state) => state.auth);
-  const { data: loggedInUser } = useGetUserByIdQuery(thisUser?._id);
+  const {
+    data: loggedInUser,
+    isLoading,
+    isError,
+    error,
+  } = useGetUserByIdQuery(thisUser?._id);
   const [friendsArray, setFriendsId] = useState([]);
   const [onlineUser, setOnlineUser] = useState([]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("getUsers", (user) => setOnlineUser(user));
-    }
-  }, [loggedInUser]);
+  useEffect(
+    () => {
+      if (socket) {
+        socket.on("getUsers", (user) => {
+          setOnlineUser(user);
+          console.log(user);
+        });
+      }
+    }, //eslint-disable-next-line react-hooks/exhaustive-deps
+    [loggedInUser, socket]
+  );
   useEffect(() => {
     const friendArray = loggedInUser?.payload?.user?.friends.filter((f) =>
       onlineUser.some((u) => u.userId === f)
@@ -81,9 +92,56 @@ const OnlinePeople = () => {
       return firstName;
     }
   };
-  return (
-    <>
-      <div className="online-people px-5 py-2 w-full h-[80px] flex snap-x gap-5 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth mb-3">
+
+  //decide what to render
+  let content = null;
+  if (isLoading) {
+    content = (
+      <>
+        <Box sx={{ textAlign: "center" }}>
+          <Skeleton
+            animation="pulse"
+            variant="circular"
+            width={50}
+            height={50}
+          />
+          <Skeleton animation="pulse" width={50} height={10} />
+        </Box>
+        <Box sx={{ textAlign: "center" }}>
+          <Skeleton
+            animation="pulse"
+            variant="circular"
+            width={50}
+            height={50}
+          />
+          <Skeleton animation="pulse" width={50} height={10} />
+        </Box>
+        <Box sx={{ textAlign: "center" }}>
+          <Skeleton
+            animation="pulse"
+            variant="circular"
+            width={50}
+            height={50}
+          />
+          <Skeleton animation="pulse" width={50} height={15} />
+        </Box>
+      </>
+    );
+  }
+  if (!isLoading && isError) {
+    console.log(error);
+    content = <Alert severity="error">{error}</Alert>;
+  }
+  if (!isLoading && !isError && onlineFriends?.payload?.user?.length === 0) {
+    content = (
+      <Alert severity="info" sx={{ fontSize: "12px", textAlign: "center" }}>
+        No online friends
+      </Alert>
+    );
+  }
+  if (!isLoading && !isError && onlineFriends?.payload?.user?.length > 0) {
+    content = (
+      <>
         {onlineFriends?.payload?.user?.map((user) => (
           <div
             key={user?._id}
@@ -110,8 +168,13 @@ const OnlinePeople = () => {
             </Typography>
           </div>
         ))}
-      </div>
-    </>
+      </>
+    );
+  }
+  return (
+    <div className="online-people px-5 py-2 w-full h-[80px] flex snap-x gap-5 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth mb-3">
+      {content}
+    </div>
   );
 };
 

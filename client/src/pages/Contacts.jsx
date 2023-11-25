@@ -3,27 +3,55 @@ import SingleContact from "./SingleContact";
 import { useEffect, useState } from "react";
 import { useGetConversationsQuery } from "../features/conversations/conversationsApi";
 import { People, Search } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Box, IconButton, Skeleton, Stack } from "@mui/material";
+import { socket } from "../socket";
+import { useSelector } from "react-redux";
 
 /*eslint-disable react/prop-types */
-const Contacts = ({
-  setIsFriendModalOpen,
-  onlineUser,
-  request,
-  setRequest,
-}) => {
+const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
   const [conversations, setConversations] = useState([]);
+  const [onlineUser, setOnlineUser] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   const auth = localStorage.getItem("auth");
   const authParsed = JSON.parse(auth);
   const user = authParsed.user;
 
-  const { data } = useGetConversationsQuery(user._id);
+  const { data, isLoading, isError, error } = useGetConversationsQuery(
+    user._id
+  );
+  const { user: loggedInUser } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    socket?.on("getUsers", (data) => {
+      setOnlineUser(data);
+    });
+  }, [loggedInUser]);
 
   useEffect(() => {
     setConversations(data?.payload?.conversation);
   }, [data]);
+
+  //decide what to render
+  let content = null;
+  if (isLoading) {
+    content = (
+      <>
+        <Stack direction="row" width="100%" height="70px" padding={4}>
+          <Skeleton
+            animation="pulse"
+            variant="circular"
+            width={40}
+            height={40}
+          />
+          <Box>
+            <Skeleton animation="pulse" width={40} height={10} />
+            <Skeleton animation="pulse" width={20} height={10} />
+          </Box>
+        </Stack>
+      </>
+    );
+  }
 
   return (
     <>
@@ -39,7 +67,6 @@ const Contacts = ({
             </IconButton>
           </div>
         </div>
-
         <div className="search-input p-2 w-full my-2">
           <form className="relative">
             <input
@@ -62,7 +89,6 @@ const Contacts = ({
         </div>
         <div className="container-contact w-full h-full overflow-y-auto">
           <OnlinePeople onlineUser={onlineUser} />
-
           <div
             className="all-contact w-full flex flex-col gap-1 flex-grow  overflow-y-auto"
             data-radix-scroll-area-viewport

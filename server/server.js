@@ -50,7 +50,7 @@ const removeOfflineUser = (userId) => {
 };
 
 const getUser = (userId) => {
-  return users.find((user) => user.userId === userId);
+  return users.find((user) => user?.userId === userId);
 };
 
 io.on("connection", async (socket) => {
@@ -58,19 +58,23 @@ io.on("connection", async (socket) => {
   const socket_id = socket.id;
 
   if (user_id) {
-    console.log("new user is online. his socket_id: " + socket_id);
-    addUser(user_id, socket_id);
+    console.log(
+      "new user is online. his socket_id: " +
+        socket_id +
+        "and His user id: " +
+        user_id
+    );
     removeOfflineUser(user_id);
-  }
-  socket.on("userId", async (id) => {
     await User.findByIdAndUpdate(user_id, {
       socket_id: socket_id,
       status: "online",
     });
+    addUser(user_id, socket_id);
+    console.log(users, "testing");
     io.emit("getUsers", users);
+  }
+  socket.on("userId", async (id) => {
     io.emit("offlineUser", connectedUserOffline);
-    console.log(users);
-    console.log(connectedUserOffline, "offline user");
     const conversation = await Conversations.find({
       participients: { $in: [user_id] },
     }).populate("participients", "-password");
@@ -115,7 +119,6 @@ io.on("connection", async (socket) => {
     removeUser(socket.id);
     io.emit("getUsers", users);
     io.emit("offlineUser", connectedUserOffline);
-    console.log(connectedUserOffline, "offline user");
     console.log(users);
   });
 });

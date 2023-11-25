@@ -4,6 +4,7 @@ import { apiSlice } from "../api/apiSlice";
 export const conversationSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getConversations: builder.query({
+      // eslint-disable-next-line no-unused-vars
       query: (id) => ({
         url: `/api/conversation`,
         method: "GET",
@@ -24,17 +25,32 @@ export const conversationSlice = apiSlice.injectEndpoints({
         if (socket) {
           socket?.on("getUsers", (users) => {
             updateCachedData((draft) => {
-              draft?.payload?.conversation.forEach((conversation) => {
+              draft?.payload?.conversation?.forEach((conversation) => {
                 const matchedUser = conversation?.participients?.find((u) => {
                   return (
-                    u._id !== arg && users.some((usr) => usr.userId == u._id)
+                    u._id !== arg && users?.some((usr) => usr.userId == u._id)
                   );
                 });
+                console.log(JSON.stringify(matchedUser, "online User"));
                 if (matchedUser) {
                   matchedUser.status = "online";
                 }
               });
-              socket?.on("offlineUser", (data) => console.log(data));
+              socket?.on("offlineUser", (data) => {
+                updateCachedData((draft) => {
+                  draft?.payload?.conversation.forEach((conversation) => {
+                    const matchedUser = conversation?.participients?.find(
+                      (u) => {
+                        return data?.some((usr) => usr?.userId == u._id);
+                      }
+                    );
+                    console.log(JSON.stringify(matchedUser));
+                    if (matchedUser) {
+                      matchedUser.status = "offline";
+                    }
+                  });
+                });
+              });
             });
           });
         }

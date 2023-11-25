@@ -3,7 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../features/auth/authApi";
 import logo from "../../images/chat-app-icon-5.jpg";
 import Button from "@mui/material/Button";
-import { Replay, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Facebook,
+  Google,
+  Twitter,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
+import { CircularProgress, Divider } from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const LoginForm = () => {
@@ -94,19 +101,27 @@ const LoginForm = () => {
                 Password <span className="text-red-600 text-lg px-1">* </span>:
               </label>
               <div
-                className="eye w-[15px] h-[15px] absolute left-[360px] top-9 cursor-pointer"
+                className="eye w-[30px] h-[34px] rounded-r absolute left-[353px] top-7 bg-slate-400 flex justify-center items-center"
                 onClick={() => setShowPass(!showPass)}
               >
-                {showPass ? <Visibility /> : <VisibilityOff />}
+                {showPass ? (
+                  <Visibility
+                    sx={{ width: "18px", height: "18px", cursor: "pointer" }}
+                  />
+                ) : (
+                  <VisibilityOff sx={{ width: "18px", height: "18px" }} />
+                )}
               </div>
               <input
                 required
                 type={`${showPass ? "text" : "password"}`}
                 placeholder="WsuyDFHjf@3f7"
-                className="p-1 rounded w-11/12 outline-none px-3 border-[1px] border-blue-400"
+                className="p-1 rounded w-11/12 outline-none px-3 pr-9 border-[1px] border-blue-400"
                 name="password"
                 value={password}
                 onChange={handleChange}
+                minLength={6}
+                maxLength={20}
               />
               <div
                 className={`error absolute top-16 text-[12px] text-red-500 left-5 ${
@@ -116,41 +131,40 @@ const LoginForm = () => {
                 {error}
               </div>
             </div>
-
-            <div className="w-full flex justify-end mr-9 text-[12px] underline cursor-pointer">
+            <div className="w-full flex justify-end mr-9 mb-2 text-[12px] underline cursor-pointer">
               Forgot Password?
             </div>
-            <button
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: "91.6%" }}
+              startIcon={
+                isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
+              }
               type="submit"
-              className="p-1 mt-2 flex justify-center rounded   w-11/12 text-white bg-blue-400"
               disabled={isLoading}
             >
-              {isLoading && (
-                <div className="animate-spin   h-5 w-5 mr-3  text-white ">
-                  <Replay />
-                </div>
-              )}
-
-              {isLoading ? "" : "Log In"}
-            </button>
+              Log In
+            </Button>
           </form>
-          <div className="flex items-center my-5">
-            <div className="flex-1 w-[320px] border-t border-gray-300 mr-4"></div>
-            <div className="text-gray-600 text-sm">OR</div>
-            <div className="flex-1 border-t border-gray-300 ml-4"></div>
+          <div className="flex items-center my-5 w-[320px]">
+            <Divider color="black" sx={{ width: "100%" }}>
+              OR
+            </Divider>
           </div>
           <div className="flex items-center w-[300px] h-9  justify-center gap-9">
             <div className="text-red-500 cursor-pointer">
-              <i className="fa-brands fa-google"></i>
+              <Google />
             </div>
             <div className="text-blue-600 cursor-pointer">
-              <i className="fa-brands fa-twitter"></i>
+              <Twitter />
             </div>
             <div className="text-blue-600 cursor-pointer">
-              <i className="fa-brands fa-facebook"></i>
+              <Facebook />
             </div>
           </div>
-          <Button variant="contained">Hello world</Button>
         </div>
       </div>
     </>

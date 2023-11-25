@@ -10,7 +10,21 @@ import {
 import { useRegisterMutation } from "../../features/auth/authApi";
 import { uploadImage as saveImage } from "../../utils/uploadImage";
 import logo from "../../images/chat-app-icon-5.jpg";
-import { Replay, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Facebook,
+  Google,
+  Twitter,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const RegistrationForm = () => {
@@ -293,44 +307,40 @@ const RegistrationForm = () => {
             className="password w-1/2 h-auto flex flex-col justify-start relative
            "
           >
-            <label
-              htmlFor="password"
-              className={`text-sm text-center flex px-2  absolute top-2 left-3 transform transition-transform ${
-                isFocused.password || password
-                  ? "translate-y-[-90%] bg-white"
-                  : ""
-              } `}
-              onClick={() => handleLabelClick("password")}
-            >
-              Password
-              {password.length > 0 || isFocused.password ? (
-                <span className=" text-red-600">* </span>
-              ) : (
-                ""
-              )}
-            </label>
-            <div
-              className="eye w-[15px] h-[15px] absolute left-[135px] top-3 cursor-pointer"
-              onClick={() => setShowPass(!showPass)}
-            >
-              {showPass ? <Visibility /> : <VisibilityOff />}
-            </div>
-            <input
+            <TextField
               required
               type={`${showPass ? "text" : "password"}`}
               id="password"
-              className={`w-[160px] h-10  py-2 px-3 pr-7 rounded outline-none  ${
+              size="small"
+              label="Password"
+              sx={{ width: "160px" }}
+              color={
                 password.length > 0 && !checkPass
-                  ? "border-2 border-red-500"
+                  ? "error"
                   : password.length >= 6 && checkPass
-                  ? "border-2 border-green-500"
-                  : "border-[1px] border-blue-500"
-              }`}
+                  ? "success"
+                  : "primary"
+              }
               name="password"
               value={password}
               onChange={handleChange}
-              onFocus={() => setIsFocused({ ...isFocused, password: true })}
-              onBlur={() => setIsFocused({ ...isFocused, password: false })}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPass(!showPass)}
+                      edge="end"
+                    >
+                      {showPass ? (
+                        <VisibilityOff sx={{ width: "18px", height: "18px" }} />
+                      ) : (
+                        <Visibility sx={{ width: "18px", height: "18px" }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <div
               className={`error text-sm/[6px] tracking-wide absolute top-[40px] text-red-500 leading-3 w-[400px] ${
@@ -346,48 +356,45 @@ const RegistrationForm = () => {
             </div>
           </div>
           <div className="confirm-password  h-auto flex flex-col justify-center items-center relative">
-            <label
-              htmlFor="confirmPassword"
-              className={`text-sm text-center flex px-2  absolute top-2 left-3 transform transition-transform ${
-                isFocused.confirmPassword || confirmPassword
-                  ? "translate-y-[-90%] bg-white"
-                  : ""
-              } `}
-              onClick={() => handleLabelClick("confirmPassword")}
-            >
-              Confirm Password
-              {confirmPassword.length > 0 || isFocused.confirmPassword ? (
-                <span className=" text-red-600">* </span>
-              ) : (
-                ""
-              )}
-            </label>
-            <div
-              className="eye w-[15px] h-[15px] absolute left-[135px] top-3 cursor-pointer"
-              onClick={() => setShowPass(!showPass)}
-            >
-              {showPass ? <Visibility /> : <VisibilityOff />}
-            </div>
-            <input
+            <TextField
               required
+              label="Confirm Password"
               type={`${showPass ? "text" : "password"}`}
               id="confirmPassword"
-              className={`w-[160px] h-10  py-2 px-3 pr-7 rounded outline-none  ${
+              size="small"
+              color={
                 confirmPassword.length > 0
                   ? confirmPassword !== password || !checkPass
-                    ? "border-2 border-red-500"
-                    : "border-2 border-green-500"
-                  : "border-[1px] border-blue-500"
-              }`}
+                    ? "error"
+                    : "success"
+                  : "primary"
+              }
+              sx={{
+                width: "180px",
+                "& .MuiFormLabel-root": {
+                  fontSize: "14px",
+                },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPass(!showPass)}
+                      edge="end"
+                    >
+                      {showPass ? (
+                        <VisibilityOff sx={{ width: "18px", height: "18px" }} />
+                      ) : (
+                        <Visibility sx={{ width: "18px", height: "18px" }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               name="confirmPassword"
               value={confirmPassword}
               onChange={handleChange}
-              onFocus={() =>
-                setIsFocused({ ...isFocused, confirmPassword: true })
-              }
-              onBlur={() =>
-                setIsFocused({ ...isFocused, confirmPassword: false })
-              }
             />
             <div
               className={`error text-sm/[6px] tracking-wide absolute top-[40px] right-5 text-red-500 leading-3 w-[400px]   ${
@@ -410,19 +417,18 @@ const RegistrationForm = () => {
             onChange={handleImageUpload}
           />
         </div>
-        <button
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: "91.6%" }}
+          startIcon={
+            isLoading ? <CircularProgress size={20} color="inherit" /> : null
+          }
           type="submit"
           disabled={isLoading}
-          className="p-1 rounded bg-blue-400 w-11/12 text-white my-3 flex justify-center"
         >
-          {isLoading && (
-            <div className="animate-spin   h-5 w-5 mr-3  text-white ">
-              <Replay />
-            </div>
-          )}
-
-          {isLoading ? "" : "Create account"}
-        </button>
+          Register
+        </Button>
         <div className="text-[12px]">
           By signning up, I agree to{" "}
           <span className="font-semibold underline cursor-pointer">
@@ -435,20 +441,20 @@ const RegistrationForm = () => {
           </span>
         </div>
       </form>
-      <div className="flex items-center my-5">
-        <div className="flex-1 w-[320px] border-t border-gray-300 mr-4"></div>
-        <div className="text-gray-600 text-sm">OR</div>
-        <div className="flex-1 border-t border-gray-300 ml-4"></div>
+      <div className="flex items-center my-5 w-[320px]">
+        <Divider color="black" sx={{ width: "100%" }}>
+          OR
+        </Divider>
       </div>
       <div className="flex items-center w-[300px] h-9  justify-center gap-9">
         <div className="text-red-500 cursor-pointer">
-          <i className="fa-brands fa-google"></i>
+          <Google />
         </div>
         <div className="text-blue-600 cursor-pointer">
-          <i className="fa-brands fa-twitter"></i>
+          <Twitter />
         </div>
         <div className="text-blue-600 cursor-pointer">
-          <i className="fa-brands fa-facebook"></i>
+          <Facebook />
         </div>
       </div>
     </div>

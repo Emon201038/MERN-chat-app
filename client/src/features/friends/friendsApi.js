@@ -22,6 +22,7 @@ export const ContactSlice = apiSlice.injectEndpoints({
       }),
       async onCacheEntryAdded(
         arg,
+        // eslint-disable-next-line no-unused-vars
         { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
       ) {
         await cacheDataLoaded;
@@ -34,7 +35,6 @@ export const ContactSlice = apiSlice.injectEndpoints({
               );
 
               draft.payload.user = filteredUsers;
-              console.log(JSON.stringify(draft));
             });
           });
         }

@@ -26,24 +26,6 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
     }
   }, [arrivalMessage, selectedFriend]);
 
-  useEffect(() => {
-    const getMessage = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:3001/api/conversation/message/${selectedConversation}`,
-          { method: "GET", credentials: "include" }
-        );
-        const data = await res.json();
-        setMessage(data?.payload?.messages);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (selectedConversation) {
-      getMessage();
-    }
-  }, [selectedConversation]);
-
   const handleSentMessage = async (e) => {
     e.preventDefault();
 
@@ -98,7 +80,6 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
         <div className="wrapper w-full h-full flex flex-col">
           <Head selectedFriend={selectedFriend} />
           <Messages skip={request} />
-
           <ConversationForm
             inputValue={inputValue}
             setInputValue={setInputValue}

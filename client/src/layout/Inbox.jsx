@@ -6,23 +6,18 @@ import Sidebar from "../pages/Sidebar";
 import Contacts from "../pages/Contacts";
 import Conversation from "../pages/Conversation";
 import ProfileModal from "../Modals/ProfileModal";
-// import io from "socket.io-client";
-import { useDispatch, useSelector } from "react-redux";
-import { onlineFriends } from "../features/friends/friendSlice";
 import { connectSocket } from "../socket";
+import { useSelector } from "react-redux";
 
 function Inbox() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFriendModalOpen, setIsFriendModalOpen] = useState(false);
-  const [onlineUser, setOnlineUser] = useState([]);
   const [request, setRequest] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const [logout, { data, error }] = useLogoutMutation();
   const navigate = useNavigate();
-  const isLoggedIn = document.cookie.includes("accessToken=");
   const socket = useRef();
-  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     await logout();
@@ -40,10 +35,6 @@ function Inbox() {
     }
   }, [data, error, navigate]);
 
-  const userInfo = localStorage.getItem("auth");
-  const user = JSON.parse(userInfo);
-  const user_id = user?.user._id;
-
   const { user: loggedInUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -57,36 +48,17 @@ function Inbox() {
         createdAt: Date.now(),
       });
     });
-    socket.current?.on("pre", (data) => console.log(data));
+
     return () => {
       socket.current.disconnect();
     };
-  }, [loggedInUser, dispatch]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      window.onload = () => {
-        if (!location.hash) {
-          location = location + "#loaded";
-          window.location.reload();
-        }
-      };
-    }
-  }, [isLoggedIn, user_id, loggedInUser]);
-
-  useEffect(() => {
-    socket.current?.emit("userId", loggedInUser);
-    socket.current?.on("getUsers", (data) => {
-      setOnlineUser(data);
-    });
   }, [loggedInUser]);
-  dispatch(onlineFriends(onlineUser));
+
   return (
     <div className="flex w-[100vw]  h-[100vh] overflow-hidden">
       <Sidebar setIsModalOpen={setIsModalOpen} />
       <Contacts
         setIsFriendModalOpen={setIsFriendModalOpen}
-        onlineUser={onlineUser}
         request={request}
         setRequest={setRequest}
       />

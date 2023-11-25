@@ -7,7 +7,6 @@ import { selecteFriend } from "../features/friends/friendSlice";
 import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CheckCircle } from "@mui/icons-material";
-import { socket } from "../socket";
 /*eslint-disable react/prop-types */
 const SingleContact = ({
   conversation,
@@ -24,13 +23,6 @@ const SingleContact = ({
     );
     setFriends(friend);
   }, [conversation, currentUser]);
-  useEffect(() => {
-    if (socket) {
-      socket?.on("getMessage", (data) => {
-        return { ...conversation, lastMessage: data };
-      });
-    }
-  }, [conversation]);
 
   const handleClick = (id, friend) => {
     setSelectedUserId(id);

@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useGetMessagesQuery } from "../../features/conversations/conversationsApi";
 import { SimpleBarStyle } from "../Scrollbar";
 import Message from "./Message";
+import { Alert, CircularProgress, Stack } from "@mui/material";
 
 /*eslint-disable react/prop-types */
 const Messages = ({ skip }) => {
@@ -16,13 +17,22 @@ const Messages = ({ skip }) => {
   //decide what to render
   let content = null;
   if (isLoading) {
-    content = <div>Loading.....</div>;
+    content = (
+      <Stack
+        width="100%"
+        height="100%"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress />
+      </Stack>
+    );
   }
   if (!isLoading && isError) {
-    content = <div>{error}</div>;
+    content = <Alert severity="error">{error}</Alert>;
   }
   if (!isLoading && !isError && data?.payload?.messages?.length === 0) {
-    content = <div>No messages found</div>;
+    content = <Alert severity="info">This is an error message!</Alert>;
   }
   if (!isLoading && !isError && data?.payload?.messages?.length > 0) {
     content = (
