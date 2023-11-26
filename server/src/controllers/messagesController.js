@@ -67,8 +67,8 @@ const handleCreateMessage = async (req, res, next) => {
 const handleGetMessages = async (req, res, next) => {
   try {
     const conversationId = req.params.conversationId;
-    const page = req.query.page || 1;
-    const limit = req.query.page || 8;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 8;
     const messagesArray = await OneToOneMessage.find({
       conversationId,
     })

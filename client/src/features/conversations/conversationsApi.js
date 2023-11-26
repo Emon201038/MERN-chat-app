@@ -58,7 +58,7 @@ export const conversationSlice = apiSlice.injectEndpoints({
     }),
     getMessages: builder.query({
       query: (data) => ({
-        url: `/api/conversation/message/${data}`,
+        url: `/api/conversation/message/${data}?limit=8&page=1`,
         method: "GET",
       }),
       async onCacheEntryAdded(arg, { cacheDataLoaded, updateCachedData }) {
@@ -76,6 +76,37 @@ export const conversationSlice = apiSlice.injectEndpoints({
               });
             });
           });
+        }
+      },
+    }),
+    getMoreMessages: builder.query({
+      query: (data) => ({
+        url: `/api/conversation/message/${data.conversationId}?limit=8&page=${data.page}`,
+        method: "GET",
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const messagesRes = await queryFulfilled;
+          if (messagesRes?.data?.payload?.messages?.length > 0) {
+            dispatch(
+              apiSlice.util.updateQueryData(
+                "getMessages",
+                arg?.conversationId,
+                (draft) => {
+                  console.log("draft", JSON.stringify(draft));
+                  console.log("newMessages", JSON.stringify(messagesRes));
+                  draft.payload.messages = [
+                    ...messagesRes.data.payload.messages,
+                    ...draft.payload.messages,
+                  ];
+                  draft.payload.pagination =
+                    messagesRes.data.payload.pagination;
+                }
+              )
+            );
+          }
+        } catch (error) {
+          console.log(error);
         }
       },
     }),
@@ -133,9 +164,3 @@ export const {
   useGetMessagesQuery,
   useSentMessageMutation,
 } = conversationSlice;
-
-// apiResponse.payload.conversation.forEach((conversation) => {
-//   const matchedUser = conversation.participients.find((participant) => {users.find((user) => user.userId === participant._id);
-
-//   });
-// });
