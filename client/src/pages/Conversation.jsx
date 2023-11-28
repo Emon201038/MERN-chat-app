@@ -66,6 +66,8 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
     }
   };
 
+  console.log(selectedConversation);
+
   // decide whats to render
   let content = null;
   if (!selectedConversation) {

@@ -1,7 +1,7 @@
 import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
-import { selectedConversation } from "../features/conversations/conversationSlice";
+import { selecteConversation } from "../features/conversations/conversationSlice";
 import { useDispatch } from "react-redux";
 import { selecteFriend } from "../features/friends/friendSlice";
 import { Avatar, Badge, Typography } from "@mui/material";
@@ -17,6 +17,7 @@ const SingleContact = ({
 }) => {
   const [friends, setFriends] = useState(null);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const friend = conversation.participients.find(
       (u) => u._id !== currentUser._id
@@ -26,7 +27,7 @@ const SingleContact = ({
 
   const handleClick = (id, friend) => {
     setSelectedUserId(id);
-    dispatch(selectedConversation(id));
+    dispatch(selecteConversation(id));
     dispatch(selecteFriend(friend));
     setRequest(true);
   };

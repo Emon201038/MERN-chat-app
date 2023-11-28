@@ -93,8 +93,6 @@ export const conversationSlice = apiSlice.injectEndpoints({
                 "getMessages",
                 arg?.conversationId,
                 (draft) => {
-                  console.log("draft", JSON.stringify(draft));
-                  console.log("newMessages", JSON.stringify(messagesRes));
                   draft.payload.messages = [
                     ...messagesRes.data.payload.messages,
                     ...draft.payload.messages,

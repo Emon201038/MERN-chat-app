@@ -8,6 +8,7 @@ import PublicRoute from "./components/Protected Routes/PublicRoute";
 import Verification from "./layout/Verification";
 import Inbox from "./layout/Inbox";
 import NotFound from "./layout/NotFound";
+import ForgetPassword from "./pages/ForgetPassword";
 
 function App() {
   const authChecked = useAuthCheck();
@@ -44,6 +45,7 @@ function App() {
         />
         <Route path="/registration/activate/:token" element={<Activate />} />
         <Route path="/verify" element={<Verification />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </Router>

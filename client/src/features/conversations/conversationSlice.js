@@ -9,7 +9,7 @@ const conversationSlice = createSlice({
   name: "conversation",
   initialState: initialState,
   reducers: {
-    selectedConversation: (state, action) => {
+    selecteConversation: (state, action) => {
       state.selectedConversation = action.payload;
     },
     unSelectedConversation: (state) => {
@@ -19,5 +19,5 @@ const conversationSlice = createSlice({
 });
 
 export default conversationSlice.reducer;
-export const { selectedConversation, unSelectedConversation } =
+export const { selecteConversation, unSelectedConversation } =
   conversationSlice.actions;

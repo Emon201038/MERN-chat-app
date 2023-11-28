@@ -25,7 +25,6 @@ const OnlinePeople = () => {
       if (socket) {
         socket.on("getUsers", (user) => {
           setOnlineUser(user);
-          console.log(user);
         });
       }
     }, //eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../features/auth/authApi";
 import logo from "../../images/chat-app-icon-5.jpg";
 import Button from "@mui/material/Button";
@@ -132,7 +132,7 @@ const LoginForm = () => {
               </div>
             </div>
             <div className="w-full flex justify-end mr-9 mb-2 text-[12px] underline cursor-pointer">
-              Forgot Password?
+              <Link to="/forget-password">Forgot Password?</Link>
             </div>
             <Button
               variant="contained"

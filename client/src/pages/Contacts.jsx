@@ -3,7 +3,15 @@ import SingleContact from "./SingleContact";
 import { useEffect, useState } from "react";
 import { useGetConversationsQuery } from "../features/conversations/conversationsApi";
 import { People, Search } from "@mui/icons-material";
-import { Box, IconButton, Skeleton, Stack } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+  Skeleton,
+  Stack,
+} from "@mui/material";
 import { socket } from "../socket";
 import { useSelector } from "react-redux";
 
@@ -13,20 +21,16 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
   const [onlineUser, setOnlineUser] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const auth = localStorage.getItem("auth");
-  const authParsed = JSON.parse(auth);
-  const user = authParsed.user;
-
+  const { user } = useSelector((state) => state.auth);
   const { data, isLoading, isError, error } = useGetConversationsQuery(
     user._id
   );
-  const { user: loggedInUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
     socket?.on("getUsers", (data) => {
       setOnlineUser(data);
     });
-  }, [loggedInUser]);
+  }, [user]);
 
   useEffect(() => {
     setConversations(data?.payload?.conversation);
@@ -52,7 +56,29 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
       </>
     );
   }
-
+  if (!isLoading && isError) {
+    content = <div>{error}</div>;
+  }
+  if (!isLoading && !isError && data?.payload?.conversation?.length === 0) {
+    content = <div>No conversation found</div>;
+  }
+  if (!isLoading && !isError && data?.payload?.conversation?.length > 0) {
+    content = (
+      <>
+        {conversations?.map((c) => (
+          <SingleContact
+            conversation={c}
+            key={c._id}
+            currentUser={user}
+            selectedUserId={selectedUserId}
+            setSelectedUserId={setSelectedUserId}
+            request={request}
+            setRequest={setRequest}
+          />
+        ))}
+      </>
+    );
+  }
   return (
     <>
       <div className="contacts h-full w-[320px]  flex flex-col items-center border-r-2">
@@ -68,42 +94,25 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
           </div>
         </div>
         <div className="search-input p-2 w-full my-2">
-          <form className="relative">
-            <input
-              type="text"
-              className="w-full h-[35px] rounded-md relative p-2 bg-slate-200"
-              placeholder="Search..."
+          <FormControl>
+            <OutlinedInput
+              size="small"
+              id="input-with-icon-adornment"
+              placeholder="Search in conversation"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton>
+                    <Search color="primary" />
+                  </IconButton>
+                </InputAdornment>
+              }
             />
-            <IconButton
-              sx={{
-                width: "30px",
-                height: "30px",
-                position: "absolute",
-                top: "3px",
-                right: "5px",
-              }}
-            >
-              <Search sx={{ width: "20px", height: "20px" }} />
-            </IconButton>
-          </form>
+          </FormControl>
         </div>
         <div className="container-contact w-full h-full overflow-y-auto">
           <OnlinePeople onlineUser={onlineUser} />
-          <div
-            className="all-contact w-full flex flex-col gap-1 flex-grow  overflow-y-auto"
-            data-radix-scroll-area-viewport
-          >
-            {conversations?.map((c) => (
-              <SingleContact
-                conversation={c}
-                key={c._id}
-                currentUser={user}
-                selectedUserId={selectedUserId}
-                setSelectedUserId={setSelectedUserId}
-                request={request}
-                setRequest={setRequest}
-              />
-            ))}
+          <div className="all-contact w-full flex flex-col gap-1 flex-grow  overflow-y-scroll">
+            {content}
           </div>
         </div>
       </div>

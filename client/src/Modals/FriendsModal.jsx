@@ -9,10 +9,6 @@ import { CloseOutlined } from "@mui/icons-material";
 const FriendsModal = ({ setIsFriendModalOpen }) => {
   const [requestModalOpen, setRequestModalOpen] = useState(false);
 
-  // const auth = localStorage.getItem("auth");
-  // const authParsed = JSON.parse(auth);
-  // const user = authParsed.user;
-
   const [tabActive, setTabActive] = useState("Explore");
 
   const handleModalClose = () => {};

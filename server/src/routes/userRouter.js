@@ -6,6 +6,7 @@ const {
   handleActivateUser,
   handleEditUser,
   handleGetUser,
+  handleForgetPassword,
 } = require("../controllers/userController");
 const {
   validateUserRegistration,
@@ -40,5 +41,7 @@ userRouter.put("/:id", isLoggedIn, handleEditUser);
 userRouter.get("/", isLoggedIn, handleGetUsers);
 
 userRouter.get("/:id", isLoggedIn, handleGetUser);
+
+userRouter.post("/forget-password", isLoggedOut, handleForgetPassword);
 
 module.exports = userRouter;

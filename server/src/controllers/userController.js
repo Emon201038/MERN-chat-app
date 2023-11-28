@@ -205,10 +205,30 @@ const handleEditUser = async (req, res, next) => {
   }
 };
 
+const handleForgetPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw createError(400, "email is required");
+    }
+    const user = await User.findOne({ email: email }).select("-password");
+    if (!user) {
+      throw createError(404, "No user found with this email address");
+    }
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "User found successfully",
+      payload: { user },
+    });
+  } catch (error) {}
+};
+
 module.exports = {
   handleGetUsers,
   handleGetUser,
   handleProcessRegister,
   handleActivateUser,
   handleEditUser,
+  handleForgetPassword,
 };

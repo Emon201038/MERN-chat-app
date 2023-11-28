@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGetFriendsQuery } from "../../features/friends/friendsApi";
 import useDebounce from "../../Hooks/useDebounce";
 import { ModeCommentOutlined, Search } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const Friends = () => {
@@ -28,9 +29,7 @@ const Friends = () => {
   if (isLoading) {
     content = (
       <div className=" flex justify-center items-center h-[50px] ">
-        <div className="animate-spin h-[40px] w-[40px]  text-blue-500 ">
-          <Search />
-        </div>
+        <CircularProgress />
       </div>
     );
   }
