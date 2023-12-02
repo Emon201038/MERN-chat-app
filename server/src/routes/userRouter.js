@@ -7,10 +7,12 @@ const {
   handleEditUser,
   handleGetUser,
   handleForgetPassword,
+  handleSearchUser,
 } = require("../controllers/userController");
 const {
   validateUserRegistration,
   validateUserVerify,
+  validateForgetPassword,
 } = require("../validators/auth");
 const runvalidation = require("../validators");
 const { isLoggedIn, isLoggedOut } = require("../middlewares/auth");
@@ -40,8 +42,15 @@ userRouter.put("/:id", isLoggedIn, handleEditUser);
 // GET ---> localhost:3001/api/users
 userRouter.get("/", isLoggedIn, handleGetUsers);
 
-userRouter.get("/:id", isLoggedIn, handleGetUser);
+userRouter.post("/search-user", handleSearchUser);
 
-userRouter.post("/forget-password", isLoggedOut, handleForgetPassword);
+userRouter.get("/:id", handleGetUser);
+
+userRouter.post(
+  "/forget-password",
+  validateForgetPassword,
+  runvalidation,
+  handleForgetPassword
+);
 
 module.exports = userRouter;

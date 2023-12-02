@@ -7,12 +7,14 @@ const {
   jsonWebToken,
   jsonWebTokenNoTimeOut,
 } = require("../helper/jsonWebToken");
-const { jwtSecret, clientUrl } = require("../../secret");
+const { jwtSecret, clientUrl, jwtResetPasswordKey } = require("../../secret");
 const checkUserExists = require("../helper/checkUserExists");
 const { query } = require("express");
 const { sendEmailWithNodeMailer } = require("../helper/email");
 const { emailTemplate } = require("../templates/emailTemplate");
 const { accessTokenCookie } = require("../helper/cookie");
+const Otp = require("../models/otpModel");
+const otpTemplate = require("../templates/otpTemplate");
 
 const handleGetUsers = async (req, res, next) => {
   try {
@@ -81,18 +83,39 @@ const handleGetUser = async (req, res, next) => {
   }
 };
 
+const handleSearchUser = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const seachRegExp = new RegExp(".*" + email + ".*", "i");
+
+    const searchFilter = {
+      $or: [
+        { phone: { $regex: seachRegExp } },
+        { email: { $regex: seachRegExp } },
+      ],
+    };
+
+    const user = await User.find(searchFilter).populate("friends");
+    if (!user) {
+      throw createError(404, "User not found");
+    }
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Users found successfully",
+      payload: {
+        user,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const handleProcessRegister = async (req, res, next) => {
   try {
     const { firstName, lastName, phone, email, image, password } = req.body;
-
-    // const img = req.file;
-
-    // if (img.size > 2 * 1024 * 1024) {
-    //   throw createError(
-    //     404,
-    //     "Image size is too large.Image size must be maximum 2MB"
-    //   );
-    // }
 
     const userExists = await checkUserExists(User, email);
     if (userExists) {
@@ -208,20 +231,34 @@ const handleEditUser = async (req, res, next) => {
 const handleForgetPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    if (!email) {
-      throw createError(400, "email is required");
-    }
+
     const user = await User.findOne({ email: email }).select("-password");
     if (!user) {
       throw createError(404, "No user found with this email address");
     }
 
+    const otp = Math.floor(100000 + Math.random() * 100000);
+
+    Otp.create({ email: email, otp: otp });
+
+    const name = user.firstName + " " + user.lastName;
+
+    const mailData = {
+      email: email,
+      subject: "Reset Password",
+      html: otpTemplate(name, otp),
+    };
+
+    // await sendEmailWithNodeMailer(mailData);
+
     return successResponse(res, {
       statusCode: 200,
-      message: "User found successfully",
-      payload: { user },
+      message: "Mail sent successfull",
+      payload: {},
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
@@ -231,4 +268,5 @@ module.exports = {
   handleActivateUser,
   handleEditUser,
   handleForgetPassword,
+  handleSearchUser,
 };

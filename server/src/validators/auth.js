@@ -66,10 +66,30 @@ const validateTextMessage = [
   body("receiverId").notEmpty().withMessage("receiver id is required"),
 ];
 
+const validateForgetPassword = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("User email is required")
+    .isEmail()
+    .withMessage("Invalid email address"),
+];
+const validateResetPassword = [
+  body("token").notEmpty().withMessage("token is required"),
+  body("newPassword")
+    .trim()
+    .notEmpty()
+    .withMessage("User password is required")
+    .isLength({ min: 6 })
+    .withMessage("User password must be at least 6 characters long"),
+];
+
 module.exports = {
   validateUserRegistration,
   validateUserLogin,
   validateUserVerify,
   validateFriendRequest,
   validateTextMessage,
+  validateForgetPassword,
+  validateResetPassword,
 };
