@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
 import logo from "../images/chat-app-icon-5.jpg";
 import { useVerifyUerMutation } from "../features/auth/authApi";
-import { useEffect } from "react";
-import { DraftsOutlined, Replay } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { DraftsOutlined } from "@mui/icons-material";
+import { Avatar, Box, Button, CircularProgress } from "@mui/material";
 
 const Activate = () => {
+  const [isCreated, setIsCreated] = useState("");
   const [verify, { data, isLoading, isError, error }] = useVerifyUerMutation();
   const { token } = useParams();
   const navigate = useNavigate();
@@ -17,24 +19,55 @@ const Activate = () => {
     await verify({ token: mainToken });
   };
 
-  useEffect(() => {}, [data, navigate]);
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      setIsCreated(data?.payload);
+    }
+  }, [data]);
+
+  if (isCreated) {
+    navigate("/", { state: { createdUser: isCreated } });
+  }
 
   return (
     <div className="w-[100vw] h-[100vh] bg-slate-100 flex justify-center items-center flex-col overflow-hidden">
-      <div className="w-3/5 h-4/5 lg:h-3/5 bg-white shadow-lg overflow-y-scroll rounded">
+      <Box
+        sx={{
+          width: {
+            lg: "60%",
+            md: "70%",
+            sm: "90%",
+            xs: "90%",
+          },
+          height: {
+            xl: "50%",
+            lg: "60%",
+            md: "65%",
+            sm: "70%",
+            xs: "75%",
+          },
+        }}
+        className="bg-white shadow-lg overflow-y-hidden rounded"
+      >
         <div className="logo w-full h-[60px] flex justify-center items-center ">
-          <div className="logo w-[40px] h-[40px] border-2 border-teal-400 rounded-full flex justify-center items-center ">
-            <img src={logo} className=" " alt="" />
-          </div>
+          <Avatar
+            sx={{
+              width: "40px",
+              height: "40px",
+              border: "2px solid rgb(45,212,191)",
+            }}
+            src={logo}
+          />
         </div>
         <div className="logo w-full h-[60px] bg-gradient-to-r from-green-400 to-blue-300 flex justify-center items-center ">
           <div className="logo bg-white w-[50px] h-[50px]  rounded-full flex justify-center items-center ">
-            <div className="w-[30px] h-[30px] text-red-400 ">
+            <div className="w-[30px] h-[30px] text-red-400 text-center">
               <DraftsOutlined />
             </div>
           </div>
         </div>
-        <div className="textConten flex flex-col w-full h-[50.75vh] lg:h-[30vh]">
+        <div className="textConten flex flex-col w-full justify-center items-center h-[50.75vh] lg:h-[30vh]">
           <h1 className="p-2 text-2xl font-semibold w-full flex justify-center">
             Email verification completed
           </h1>
@@ -47,22 +80,24 @@ const Activate = () => {
             <br />
           </h3>
           <div className="button w-full flex justify-center">
-            <button
-              className="w-2/3 lg:w-1/3 h-9 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-md rounded-md tracking-widest mb-2 lg:mt-2"
+            <Button
+              sx={{
+                width: "66.66%",
+                background: "linear-gradient(to right, #06b6d4,#3b82f6)",
+                color: "white",
+                height: "36px",
+                marginTop: "8px",
+              }}
+              disabled={isLoading}
+              startIcon={isLoading && <CircularProgress size="20px" />}
               onClick={handleClick}
             >
-              {isLoading && (
-                <div className="animate-spin   h-5 w-5 mr-3  text-white ">
-                  <Replay />
-                </div>
-              )}
-
-              {isLoading ? "" : "Verify"}
-            </button>
+              verify
+            </Button>
           </div>
           {isError && <div className="text-red-500">{error.data.message}</div>}
         </div>
-      </div>
+      </Box>
     </div>
   );
 };

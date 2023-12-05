@@ -14,7 +14,7 @@ const Sidebar = ({ setIsModalOpen }) => {
 
   return (
     <>
-      <div className="side-bar h-full flex flex-col justify-between w-[80px] bg-slate-200">
+      <div className="side-bar max-sm:hidden h-full flex flex-col justify-between w-[80px] bg-slate-200">
         <Stack
           direction={"column"}
           spacing={"20px"}

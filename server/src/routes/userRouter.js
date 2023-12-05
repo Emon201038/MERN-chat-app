@@ -8,11 +8,13 @@ const {
   handleGetUser,
   handleForgetPassword,
   handleSearchUser,
+  handleVerifyCode,
 } = require("../controllers/userController");
 const {
   validateUserRegistration,
   validateUserVerify,
   validateForgetPassword,
+  validateVerifycode,
 } = require("../validators/auth");
 const runvalidation = require("../validators");
 const { isLoggedIn, isLoggedOut } = require("../middlewares/auth");
@@ -51,6 +53,13 @@ userRouter.post(
   validateForgetPassword,
   runvalidation,
   handleForgetPassword
+);
+
+userRouter.post(
+  "/forget-password/verify-code",
+  validateVerifycode,
+  runvalidation,
+  handleVerifyCode
 );
 
 module.exports = userRouter;

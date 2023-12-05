@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const otpSchema = new Schema(
   {
@@ -8,6 +9,9 @@ const otpSchema = new Schema(
     },
     otp: {
       type: String,
+      set: (v) => {
+        return bcrypt.hashSync(v, bcrypt.genSaltSync(10));
+      },
     },
   },
   { timestamps: true }

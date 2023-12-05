@@ -72,13 +72,13 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
   let content = null;
   if (!selectedConversation) {
     content = (
-      <div className="w-full h-full flex justify-center items-center text-2xl font-bold text-gray-400">
+      <div className="w-full  h-full max-sm:hidden flex justify-center items-center text-2xl font-bold text-gray-400">
         &larr; Select a contact to open a conversation
       </div>
     );
   } else {
     content = (
-      <div className="conversations w-full h-full bg-white">
+      <div className="conversations w-full max-sm:hidden  bg-white">
         <div className="wrapper w-full h-full flex flex-col">
           <Head selectedFriend={selectedFriend} />
           <Messages skip={request} />

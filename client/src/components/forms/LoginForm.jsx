@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useLoginMutation } from "../../features/auth/authApi";
 import logo from "../../images/chat-app-icon-5.jpg";
 import Button from "@mui/material/Button";
@@ -10,7 +10,7 @@ import {
   Visibility,
   VisibilityOff,
 } from "@mui/icons-material";
-import { CircularProgress, Divider } from "@mui/material";
+import { Alert, CircularProgress, Divider, Snackbar } from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const LoginForm = () => {
@@ -21,7 +21,11 @@ const LoginForm = () => {
   const [login, { data, isLoading, error: responseError }] = useLoginMutation();
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState(null);
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const isCreated = location.state && location.state?.createdUser;
+  console.log(isCreated);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +44,6 @@ const LoginForm = () => {
     if (responseError?.data?.message) {
       setError(responseError?.data?.message);
     }
-
     if (data?.payload?.userWithoutPass) {
       navigate("/inbox");
     }
@@ -48,9 +51,39 @@ const LoginForm = () => {
 
   const { email, password } = formData;
 
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  // Your boolean state goes here
+
+  // Function to handle snackbar close
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  };
+
+  useEffect(() => {
+    if (isCreated) {
+      setSnackbarOpen(true);
+    } else {
+      setSnackbarOpen(false);
+    }
+  }, [isCreated]);
+
   return (
     <>
       <div>
+        <Snackbar
+          open={isSnackbarOpen}
+          autoHideDuration={6000} // Adjust as needed
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert severity="success">
+            Account created successful.Please log in now.
+          </Alert>
+        </Snackbar>
         <div className="h-[100vh] w-full flex flex-col justify-center items-center">
           <form
             onSubmit={handleSubmit}

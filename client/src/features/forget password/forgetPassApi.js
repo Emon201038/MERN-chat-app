@@ -18,8 +18,19 @@ export const forgetPasswordSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    verifyOtp: builder.mutation({
+      query: (formData) => ({
+        url: "/api/users/forget-password/verify-code",
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
-export const { useSearchUserMutation, useSentOtpMutation } =
-  forgetPasswordSlice;
+export const {
+  useSearchUserMutation,
+  useSentOtpMutation,
+  useVerifyOtpMutation,
+} = forgetPasswordSlice;

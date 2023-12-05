@@ -2,12 +2,29 @@ import OnlinePeople from "./OnlinePeople";
 import SingleContact from "./SingleContact";
 import { useEffect, useState } from "react";
 import { useGetConversationsQuery } from "../features/conversations/conversationsApi";
-import { People, Search } from "@mui/icons-material";
 import {
+  Archive,
+  Mail,
+  Menu,
+  People,
+  Search,
+  Settings,
+  SmsOutlined,
+  Storefront,
+} from "@mui/icons-material";
+import {
+  Avatar,
   Box,
+  Drawer,
   FormControl,
+  Hidden,
   IconButton,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   OutlinedInput,
   Skeleton,
   Stack,
@@ -20,6 +37,7 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
   const [conversations, setConversations] = useState([]);
   const [onlineUser, setOnlineUser] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(1);
 
   const { user } = useSelector((state) => state.auth);
   const { data, isLoading, isError, error } = useGetConversationsQuery(
@@ -79,11 +97,129 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
       </>
     );
   }
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawerOpen(open);
+  };
+
+  const handleClick = (index) => {
+    setSelectedItem((prev) => (index !== 0 ? index : prev));
+    if (index !== 0) {
+      setDrawerOpen(false);
+    }
+  };
+
+  const drawerContent = [
+    {
+      name: "profile",
+    },
+    {
+      name: "Chats",
+      icon: <Mail />,
+    },
+    {
+      name: "Market place",
+      icon: <Storefront />,
+    },
+    {
+      name: "Message Requests",
+      icon: <SmsOutlined />,
+    },
+    {
+      name: "Archived",
+      icon: <Archive />,
+    },
+  ];
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: "100%" }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {drawerContent.map((item, index) => (
+          <ListItem
+            key={item.name}
+            disablePadding
+            sx={{ bgcolor: selectedItem === index && "lightgray" }}
+            onClick={() => handleClick(index)}
+          >
+            <ListItemButton>
+              {item.name === "profile" ? (
+                <Stack
+                  width="100%"
+                  height="40px"
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ cursor: "default" }}
+                >
+                  <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Avatar src={user.image} />
+                    <ListItemText
+                      primary={user.firstName + " " + user.lastName}
+                    />
+                  </Stack>
+                  <IconButton>
+                    <Settings />
+                  </IconButton>
+                </Stack>
+              ) : (
+                <>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </>
+              )}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <>
-      <div className="contacts h-full w-[320px]  flex flex-col items-center border-r-2">
-        <div className="head flex justify-between w-full px-5 mt-[20px] font-bold text-lg">
-          <h2>Chat</h2>
+      <div className="contacts h-full w-[320px] max-sm:w-full max-sm:px-2 flex flex-col items-center border-r-2">
+        <div className="head flex justify-between w-full px-5 max-sm:pl-0  mt-[20px] font-bold text-lg">
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Hidden smUp>
+              <IconButton onClick={toggleDrawer(true)}>
+                <Menu />
+              </IconButton>
+            </Hidden>
+            <Hidden smUp>
+              <Drawer
+                anchor="left"
+                open={drawerOpen}
+                onClose={toggleDrawer(false)}
+                PaperProps={{ style: { width: "75%" } }}
+              >
+                <div>{list("left")}</div>
+              </Drawer>
+            </Hidden>
+            <h2>Chat</h2>
+          </Stack>
           <div className="flex justify-center items-center w-[30px] h-[30px]">
             <IconButton
               sx={{ width: "45px", height: "45px" }}
@@ -94,7 +230,7 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
           </div>
         </div>
         <div className="search-input p-2 w-full my-2">
-          <FormControl>
+          <FormControl sx={{ width: "100%" }}>
             <OutlinedInput
               size="small"
               id="input-with-icon-adornment"

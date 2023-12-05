@@ -1,160 +1,920 @@
 const otpTemplate = (name, otp) => {
-  return `<!DOCTYPE html>
-<html lang="en">
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+>
   <head>
-    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Rubik:400,700&display=swap"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Old+Standard+TT:400,700&display=swap"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <meta name="x-apple-disable-message-reformatting" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title></title>
+
+    <style type="text/css">
+      @media only screen and (min-width: 520px) {
+        .u-row {
+          width: 500px !important;
+        }
+        .u-row .u-col {
+          vertical-align: top;
+        }
+
+        .u-row .u-col-100 {
+          width: 500px !important;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .u-row-container {
+          max-width: 100% !important;
+          padding-left: 0px !important;
+          padding-right: 0px !important;
+        }
+        .u-row .u-col {
+          min-width: 320px !important;
+          max-width: 100% !important;
+          display: block !important;
+        }
+        .u-row {
+          width: 100% !important;
+        }
+        .u-col {
+          width: 100% !important;
+        }
+        .u-col > div {
+          margin: 0 auto;
+        }
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      table,
+      tr,
+      td {
+        vertical-align: top;
+        border-collapse: collapse;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .ie-container table,
+      .mso-container table {
+        table-layout: fixed;
+      }
+
+      * {
+        line-height: inherit;
+      }
+
+      a[x-apple-data-detectors="true"] {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+
+      table,
+      td {
+        color: #000000;
+      }
+      @media (max-width: 480px) {
+        #u_content_heading_1 .v-font-size {
+          font-size: 17px !important;
+        }
+      }
+    </style>
   </head>
-  <body>
-    <div
-      class="container w-[100vw] h-[100vh] flex justify-center items-center"
+
+  <body
+    class="clean-body u_body"
+    style="
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      background-color: #e7e7e7;
+      color: #000000;
+    "
+  >
+    <table
       style="
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        border-collapse: collapse;
+        table-layout: fixed;
+        border-spacing: 0;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        vertical-align: top;
+        min-width: 320px;
+        margin: 0 auto;
+        background-color: #e7e7e7;
+        width: 100%;
       "
+      cellpadding="0"
+      cellspacing="0"
     >
-      <div
-        class="body w-1/3 h-[90%] flex flex-col justify-center items-center shadow-lg rounded-lg"
-        style="
-          width: 45%;
-          height: 90vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          border-radius: 8px;
-          box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-            0 4px 6px -4px rgb(0 0 0 / 0.1);
-        "
-      >
-        <div
-          class="head h-20 w-full flex flex-col justify-center items-center bg-teal-300"
-          style="
-            width: 100%;
-            height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: rgb(94, 234, 212);
-          "
-        >
-          <img
-            src="https://res.cloudinary.com/emadul-hoque-emon/image/upload/v1701282778/logo.png"
-            class="image w-10 h-10"
-            style="width: 40px; height: 40px"
-          />
-          <h4>Let's Talk</h4>
-        </div>
-        <div
-          class="main w-full h-[300px] flex flex-col justify-center"
-          style="
-            width: 100%;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-          "
-        >
-          <div
-            class="otp w-full h-[200px] flex justify-center items-center"
+      <tbody>
+        <tr style="vertical-align: top">
+          <td
             style="
-              width: 100%;
-              height: 150px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
+              word-break: break-word;
+              border-collapse: collapse !important;
+              vertical-align: top;
             "
           >
-            <img
-              src="https://res.cloudinary.com/emadul-hoque-emon/image/upload/v1701283336/otp.jpg"
-              alt=""
-              style="height: 100%"
-            />
-          </div>
-          <h1
-            class="h1 font-bold text-xl text-center"
-            style="font-size: 1.25rem; line-height: 1.75rem; text-align: center"
-          >
-            Welcome back
-            <span
-              class="span text-2xl"
-              style="font-size: 1.5rem; line-height: 2rem"
-              >${name}</span
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
             >
-          </h1>
-          <p
-            class="p mt-5 text-sm text-center"
-            style="
-              font-size: 0.875rem;
-              line-height: 1.25rem;
-              text-align: center;
-              margin-top: 20px;
-            "
-          >
-            Use the verification code below to reset your password.code will
-            expire in 10 minutes.
-          </p>
-        </div>
-        <div
-          class="code w-2/4 h-[50px] flex justify-center items-center bg-white border-2 border-gray-400 rounded-lg"
-          style="
-            width: 50%;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid rgb(156, 163, 175);
-          "
-        >
-          <h1
-            class="tracking-[5px] text-3xl font-bold"
-            style="font-size: 1.5rem; line-height: 2rem;"
-          >
-            ${otp}
-          </h1>
-        </div>
-        <p
-          class="text-[12px] mt-5 mb-2 text-slate-500 text-center"
-          style="
-            font-size: 12px;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            color: rgb(100, 116, 139);
-            text-align: center;
-          "
-        >
-          You received this email because you requested to change your password.
-          If you didn't request to change password, you can safely ignore this
-          email.
-        </p>
-      </div>
-    </div>
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          style="font-family: arial, helvetica, sans-serif;background-color: #5eead4"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <table
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  border="0"
+                                >
+                                  <tr>
+                                    <td
+                                      style="
+                                        padding-right: 0px;
+                                        padding-left: 0px;
+                                      "
+                                      align="center"
+                                    >
+                                      <img
+                                        align="center"
+                                        border="0"
+                                        src="https://res.cloudinary.com/emadul-hoque-emon/image/upload/v1701635099/r7ybawwa3omhebirjrmq.png"
+                                        alt=""
+                                        title=""
+                                        style="
+                                          outline: none;
+                                          text-decoration: none;
+                                          -ms-interpolation-mode: bicubic;
+                                          clear: both;
+                                          display: inline-block !important;
+                                          border: none;
+                                          height: auto;
+                                          float: none;
+                                          width: 11%;
+                                          max-width: 52.8px;
+                                        "
+                                        width="52.8"
+                                      />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          background-color:#5eead4;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          style="font-family: arial, helvetica, sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-font-size"
+                                  style="
+                                    font-size: 20px;
+                                    color: #000000;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p style="line-height: 140%">
+                                    <strong>Let's Talk</strong>
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          style="font-family: arial, helvetica, sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <table
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  border="0"
+                                >
+                                  <tr>
+                                    <td
+                                      style="
+                                        padding-right: 0px;
+                                        padding-left: 0px;
+                                      "
+                                      align="center"
+                                    >
+                                      <img
+                                        align="center"
+                                        border="0"
+                                        src="https://res.cloudinary.com/emadul-hoque-emon/image/upload/v1701283336/otp.jpg"
+                                        alt=""
+                                        title=""
+                                        style="
+                                          outline: none;
+                                          text-decoration: none;
+                                          -ms-interpolation-mode: bicubic;
+                                          clear: both;
+                                          display: inline-block !important;
+                                          border: none;
+                                          height: auto;
+                                          float: none;
+                                          width: 36%;
+                                          max-width: 172.8px;
+                                        "
+                                        width="172.8"
+                                      />
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          id="u_content_heading_1"
+                          style="font-family: arial, helvetica, sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <h1
+                                  class="v-font-size"
+                                  style="
+                                    margin: 0px;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                    font-size: 22px;
+                                    font-weight: 400;
+                                  "
+                                >
+                                  <strong
+                                    >Welcome back ${name}</strong
+                                  >
+                                </h1>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          style="font-family: arial, helvetica, sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-font-size"
+                                  style="
+                                    font-size: 13px;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p style="line-height: 140%">
+                                    <span
+                                      style="
+                                        color: #333333;
+                                        text-align: -webkit-center;
+                                        white-space: normal;
+                                        background-color: #ffffff;
+                                        float: none;
+                                        display: inline;
+                                        line-height: 18.2px;
+                                      "
+                                      >Use the verification code below to reset
+                                      your password.code will expire in 10
+                                      minutes.</span
+                                    >
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          style="font-family: arial, helvetica, sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <h2
+                                  class="v-font-size"
+                                  style="
+                                    margin: 0px;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                    font-size: 20px;
+                                    font-weight: 400;
+                                  "
+                                >
+                                  <span>${otp}<span></span></span>
+                                </h2>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="u-row-container"
+              style="padding: 0px; background-color: transparent"
+            >
+              <div
+                class="u-row"
+                style="
+                  margin: 0 auto;
+                  min-width: 320px;
+                  max-width: 500px;
+                  overflow-wrap: break-word;
+                  word-wrap: break-word;
+                  word-break: break-word;
+                  background-color: transparent;
+                "
+              >
+                <div
+                  style="
+                    border-collapse: collapse;
+                    display: table;
+                    width: 100%;
+                    height: 100%;
+                    background-color: transparent;
+                  "
+                >
+                  <div
+                    class="u-col u-col-100"
+                    style="
+                      max-width: 320px;
+                      min-width: 500px;
+                      display: table-cell;
+                      vertical-align: top;
+                    "
+                  >
+                    <div
+                      style="
+                        background-color: #ffffff;
+                        height: 100%;
+                        width: 100% !important;
+                        border-radius: 0px;
+                        -webkit-border-radius: 0px;
+                        -moz-border-radius: 0px;
+                      "
+                    >
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          height: 100%;
+                          padding: 0px;
+                          border-top: 0px solid transparent;
+                          border-left: 0px solid transparent;
+                          border-right: 0px solid transparent;
+                          border-bottom: 0px solid transparent;
+                          border-radius: 0px;
+                          -webkit-border-radius: 0px;
+                          -moz-border-radius: 0px;
+                        "
+                      >
+                        <table
+                          style="font-family: arial, helvetica, sans-serif"
+                          role="presentation"
+                          cellpadding="0"
+                          cellspacing="0"
+                          width="100%"
+                          border="0"
+                        >
+                          <tbody>
+                            <tr>
+                              <td
+                                style="
+                                  overflow-wrap: break-word;
+                                  word-break: break-word;
+                                  padding: 10px;
+                                  font-family: arial, helvetica, sans-serif;
+                                "
+                                align="left"
+                              >
+                                <div
+                                  class="v-font-size"
+                                  style="
+                                    font-size: 13px;
+                                    line-height: 140%;
+                                    text-align: center;
+                                    word-wrap: break-word;
+                                  "
+                                >
+                                  <p style="line-height: 140%">
+                                    <span
+                                      style="
+                                        color: #222222;
+                                        white-space: normal;
+                                        background-color: #ffffff;
+                                        float: none;
+                                        display: inline;
+                                        line-height: 19.6px;
+                                      "
+                                      >You received this email because you
+                                      requested to change your password. If you
+                                      didn't request to change your password,
+                                      you can safely ignore this email.</span
+                                    >
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
 

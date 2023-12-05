@@ -20,27 +20,6 @@ export const authApi = apiSlice.injectEndpoints({
         credentials: "include",
         body: data,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        try {
-          const result = await queryFulfilled;
-          const accessToken = document.cookie.split("accessToken=")[1];
-          localStorage.setItem(
-            "auth",
-            JSON.stringify({
-              user: result.data.payload.userWithoutPass,
-              accessToken: accessToken,
-            })
-          );
-          dispatch(
-            userLoggedIn({
-              accessToken: accessToken,
-              user: result.data?.payload?.userWithoutPass,
-            })
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      },
     }),
     uploadImage: builder.mutation({
       query: (data) => ({

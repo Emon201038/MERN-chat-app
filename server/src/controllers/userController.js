@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const User = require("../models/usersModel");
 const { successResponse } = require("./responseController");
@@ -183,8 +184,8 @@ const handleActivateUser = async (req, res, next) => {
       }
 
       const newUser = await User.create(decoded);
-      const newUserToken = jsonWebTokenNoTimeOut(decoded, jwtSecret);
-      accessTokenCookie(res, newUserToken);
+      // const newUserToken = jsonWebTokenNoTimeOut(decoded, jwtSecret);
+      // accessTokenCookie(res, newUserToken);
       return successResponse(res, {
         statusCode: 200,
         message: "New user has been activated",
@@ -239,7 +240,7 @@ const handleForgetPassword = async (req, res, next) => {
 
     const otp = Math.floor(100000 + Math.random() * 100000);
 
-    Otp.create({ email: email, otp: otp });
+    Otp.create({ email: email, otp: otp.toString() });
 
     const name = user.firstName + " " + user.lastName;
 
@@ -249,7 +250,7 @@ const handleForgetPassword = async (req, res, next) => {
       html: otpTemplate(name, otp),
     };
 
-    // await sendEmailWithNodeMailer(mailData);
+    await sendEmailWithNodeMailer(mailData);
 
     return successResponse(res, {
       statusCode: 200,
@@ -257,7 +258,33 @@ const handleForgetPassword = async (req, res, next) => {
       payload: {},
     });
   } catch (error) {
-    next(error);
+    return next(error);
+  }
+};
+
+const handleVerifyCode = async (req, res, next) => {
+  try {
+    const { code, email } = req.body;
+    console.log(code, email);
+
+    const otp = await Otp.findOne({ email: email });
+    if (!otp) {
+      throw createError(404, "code is not correct or expired");
+    }
+    console.log(otp);
+
+    const isOtpMatch = await bcrypt.compare(code, otp.otp);
+    if (!isOtpMatch) {
+      throw createError(404, "code is not correct or expired");
+    }
+
+    return successResponse(res, {
+      statusCode: 200,
+      message: "code verification successful",
+      payload: {},
+    });
+  } catch (error) {
+    return next(error);
   }
 };
 
@@ -269,4 +296,5 @@ module.exports = {
   handleEditUser,
   handleForgetPassword,
   handleSearchUser,
+  handleVerifyCode,
 };

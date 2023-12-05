@@ -287,7 +287,7 @@ const emailTemplate = (firstName, lastName, url) => {
                                       <img
                                         align="center"
                                         border="0"
-                                        src="http://res.cloudinary.com/emadul-hoque-emon/image/upload/v1698237136/images7.png"
+                                        src="https://res.cloudinary.com/emadul-hoque-emon/image/upload/v1701635099/r7ybawwa3omhebirjrmq.png"
                                         alt="Hero Image"
                                         title="Hero Image"
                                         style="

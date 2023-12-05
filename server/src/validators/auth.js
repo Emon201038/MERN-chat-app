@@ -84,6 +84,14 @@ const validateResetPassword = [
     .withMessage("User password must be at least 6 characters long"),
 ];
 
+const validateVerifycode = [
+  body("code")
+    .notEmpty()
+    .withMessage("code is required")
+    .isLength({ min: 6, max: 6 })
+    .withMessage("Code must be  6 characters long"),
+];
+
 module.exports = {
   validateUserRegistration,
   validateUserLogin,
@@ -92,4 +100,5 @@ module.exports = {
   validateTextMessage,
   validateForgetPassword,
   validateResetPassword,
+  validateVerifycode,
 };
