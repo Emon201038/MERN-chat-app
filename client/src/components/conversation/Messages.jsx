@@ -10,18 +10,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
 
 /*eslint-disable react/prop-types */
-const Messages = ({ skip }) => {
+const Messages = () => {
   const { selectedConversation } = useSelector((state) => state.conversation);
-  const { data, isLoading, isError, error } = useGetMessagesQuery(
-    selectedConversation,
-    {
-      skip: !skip,
-    }
-  );
+  const { data, isLoading, isError, error } =
+    useGetMessagesQuery(selectedConversation, { skip: false }) || {};
   const dispatch = useDispatch();
 
   const { totalPage, currentPage, nextPage } = data?.payload?.pagination || {};
-  console.log(totalPage, currentPage, nextPage);
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -75,7 +70,7 @@ const Messages = ({ skip }) => {
     content = (
       <div className="conversations-container h-[calc(100%_ - _120px)] relative  flex flex-col-reverse">
         <InfiniteScroll
-          dataLength={data.payload.messages.length}
+          dataLength={data?.payload.messages.length}
           next={fetchMore}
           hasMore={hasMore}
           loader={

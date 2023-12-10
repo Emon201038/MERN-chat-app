@@ -1,29 +1,81 @@
+import { EmojiEmotions } from "@mui/icons-material";
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
+import { socket } from "../../socket";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Lottie from "lottie-react";
-import animationdData from "../../animation/animation.json";
-import { AddCircle, Send } from "@mui/icons-material";
+import animationData from "../../animation/animation.json";
+import { useSentMessageMutation } from "../../features/conversations/conversationsApi";
 
-/*eslint-disable react/prop-types */
-const ConversationForm = ({
-  inputValue,
-  setInputValue,
-  isLoading,
-  handleSentMessage,
-  socket,
-}) => {
-  const { selectedFriend } = useSelector((state) => state.friend);
-  const { user } = useSelector((state) => state.auth);
-
+/* eslint-disable react/prop-types */
+const ConversationForm = () => {
+  // const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [inputValue, setInputValue] = useState("");
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const { user } = useSelector((state) => state.auth);
+  const { selectedConversation } = useSelector((state) => state.conversation);
+  const { selectedFriend } = useSelector((state) => state.friend);
+  const [sentMessage] = useSentMessageMutation();
+
+  const handleSentMessage = async (e) => {
+    e.preventDefault();
+
+    socket?.emit("stopTyping", {
+      senderId: user?._id,
+      receiverId: selectedFriend?._id,
+    });
+
+    socket?.emit("sendMessage", {
+      senderId: user?._id,
+      receiverId: selectedFriend?._id,
+      text: inputValue,
+      conversationId: selectedConversation,
+      createdAt: Date.now(),
+    });
+
+    setInputValue("");
+    try {
+      await sentMessage({
+        conversationId: selectedConversation,
+        receiverId: selectedFriend._id,
+        sender: user?._id,
+        text: inputValue,
+        createdAt: Date.now(),
+      });
+
+      setMessage([
+        ...message,
+        {
+          sender: user?._id,
+          receiverId: selectedFriend?._id,
+          text: inputValue,
+          createdAt: Date.now(),
+        },
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    socket?.on("typing", () => {
+      setIsTyping(true);
+    });
+
+    socket?.on("stopTyping", () => {
+      setIsTyping(false);
+    });
+  }, []);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
 
     if (!typing) {
       setTyping(true);
-      socket.current?.emit("typing", {
+      socket?.emit("typing", {
         sender: user?._id,
         receiver: selectedFriend?._id,
       });
@@ -37,7 +89,7 @@ const ConversationForm = ({
       const timeDiff = timeNow - lastTypingTime;
 
       if (timeDiff >= timerLength && typing) {
-        socket.current?.emit("stopTyping", {
+        socket?.emit("stopTyping", {
           sender: user?._id,
           receiver: selectedFriend?._id,
         });
@@ -45,23 +97,12 @@ const ConversationForm = ({
       }
     }, timerLength);
   };
-
-  useEffect(() => {
-    socket.current?.on("typing", () => {
-      setIsTyping(true);
-    });
-
-    socket.current?.on("stopTyping", () => {
-      setIsTyping(false);
-    });
-  }, [socket]);
-
   return (
-    <div className="form relative h-[60px] flex ">
+    <form onSubmit={handleSentMessage} className="w-[85%] h-[35px]">
       {isTyping && (
-        <div className="w-[60px] h-[20px] absolute top-[-40px] bg-white">
+        <div className="w-[60px] h-[20px] absolute top-[-40px] left-9 bg-white">
           <Lottie
-            animationData={animationdData}
+            animationData={animationData}
             loop
             autoplay
             marginHeight={0}
@@ -69,29 +110,52 @@ const ConversationForm = ({
           />
         </div>
       )}
-      <form className="w-full h-[40px] pt-2 flex justify-center gap-3">
-        <div className="icon w-[3vw] h-full  flex justify-center items-center">
-          <div className="plus-icon w-[30px] h-[30px] text-purple-400">
-            <AddCircle />
-          </div>
-        </div>
-        <input
+      <Box width="100%" height="100%" position="relative">
+        <TextField
+          required
           type="text"
-          className="w-[880px] h-full bg-slate-300 outline-none px-5 text-sm rounded-full"
+          sx={{
+            width: "100%",
+            height: "35px",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                border: "none",
+              },
+              "&:hover fieldset": {
+                border: "none",
+              },
+              "&.Mui-focused fieldset": {
+                border: "none",
+              },
+            },
+          }}
+          className=""
           onChange={handleChange}
           value={inputValue}
+          InputProps={{
+            sx: {
+              width: "100%",
+              height: "35px",
+              borderRadius: "999px",
+              bgcolor: "rgb(203,213,225) ",
+            },
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  sx={{
+                    width: "25px",
+                    height: "25px",
+                    color: "#1974d2",
+                  }}
+                >
+                  <EmojiEmotions />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
-        <div className="icon w-[3vw] h-full  flex justify-center items-center">
-          <button
-            onClick={handleSentMessage}
-            disabled={isLoading}
-            className="plus-icon w-[30px] h-[30px] text-purple-400 disabled:text-purple-200"
-          >
-            <Send />
-          </button>
-        </div>
-      </form>
-    </div>
+      </Box>
+    </form>
   );
 };
 

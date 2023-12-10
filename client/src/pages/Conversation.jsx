@@ -4,12 +4,13 @@ import {
   useSentMessageMutation,
 } from "../features/conversations/conversationsApi";
 import { useEffect, useState } from "react";
-import ConversationForm from "../components/forms/ConversationForm";
 import Head from "../components/conversation/Head";
 import Messages from "../components/conversation/Messages";
+import Footer from "../components/conversation/Footer";
+import { socket } from "../socket";
 
 /*eslint-disable react/prop-types */
-const Conversation = ({ request, socket, arrivalMessage }) => {
+const Conversation = ({ request, arrivalMessage }) => {
   const [message, setMessage] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
@@ -29,12 +30,12 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
   const handleSentMessage = async (e) => {
     e.preventDefault();
 
-    socket.current?.emit("stopTyping", {
+    socket?.emit("stopTyping", {
       senderId: user?._id,
       receiverId: selectedFriend?._id,
     });
 
-    socket.current?.emit("sendMessage", {
+    socket?.emit("sendMessage", {
       senderId: user?._id,
       receiverId: selectedFriend?._id,
       text: inputValue,
@@ -42,6 +43,7 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
       createdAt: Date.now(),
     });
 
+    setInputValue("");
     try {
       await sentMessage({
         conversationId: selectedConversation,
@@ -51,7 +53,6 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
         createdAt: Date.now(),
       });
 
-      setInputValue("");
       setMessage([
         ...message,
         {
@@ -65,8 +66,6 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
       console.log(error);
     }
   };
-
-  console.log(selectedConversation);
 
   // decide whats to render
   let content = null;
@@ -82,7 +81,7 @@ const Conversation = ({ request, socket, arrivalMessage }) => {
         <div className="wrapper w-full h-full flex flex-col">
           <Head selectedFriend={selectedFriend} />
           <Messages skip={request} />
-          <ConversationForm
+          <Footer
             inputValue={inputValue}
             setInputValue={setInputValue}
             isLoading={isLoading}

@@ -7,6 +7,7 @@ import { selecteFriend } from "../features/friends/friendSlice";
 import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CheckCircle } from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom";
 /*eslint-disable react/prop-types */
 const SingleContact = ({
   conversation,

@@ -93,7 +93,7 @@ const OnlinePeople = () => {
   };
 
   //decide what to render
-  let content = null;
+  let content = <h4>No Friends online</h4>;
   if (isLoading) {
     content = (
       <>

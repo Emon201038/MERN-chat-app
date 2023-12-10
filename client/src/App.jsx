@@ -13,6 +13,10 @@ import ForgetPassword from "./components/forget password/ForgetPassword";
 import Confirmation from "./components/forget password/Confirmation";
 import Login from "./components/forget password/LoginForm";
 import CodeVerification from "./components/forget password/CodeVerification";
+import MobileConversation from "./components/conversation/MobileConversation";
+import Conversation from "./pages/Conversation";
+import { Hidden } from "@mui/material";
+import { Contacts } from "@mui/icons-material";
 
 function App() {
   const authChecked = useAuthCheck();
@@ -33,12 +37,26 @@ function App() {
         />
         <Route
           path="/inbox"
+          exact
           element={
             <PrivateRoute>
               <Inbox />
             </PrivateRoute>
           }
         ></Route>
+        {/* <Route
+          path="/inbox/:conversationId"
+          element={
+            <PrivateRoute>
+              <Hidden smDown>
+                <Inbox />
+              </Hidden>
+              <Hidden smUp>
+                <MobileConversation />
+              </Hidden>
+            </PrivateRoute>
+          }
+        ></Route> */}
         <Route
           path="/registration"
           element={

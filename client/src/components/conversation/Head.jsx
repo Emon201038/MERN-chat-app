@@ -1,13 +1,16 @@
 import {
+  Avatar,
   Box,
   Button,
   FormControl,
+  Hidden,
   IconButton,
   InputAdornment,
   OutlinedInput,
   Stack,
 } from "@mui/material";
 import {
+  ArrowBack,
   Call,
   KeyboardArrowDown,
   KeyboardArrowUp,
@@ -17,10 +20,24 @@ import {
 } from "@mui/icons-material";
 import { format } from "timeago.js";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { unSelectedConversation } from "../../features/conversations/conversationSlice";
+import { unSelecteFriend } from "../../features/friends/friendSlice";
+import { useNavigate } from "react-router-dom";
 
 /*eslint-disable react/prop-types */
-const Head = ({ selectedFriend }) => {
+const Head = () => {
   const [isBoxVissible, setIsBoxVissible] = useState(false);
+  const { selectedFriend } = useSelector((state) => state.friend);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleUnselectConversation = () => {
+    dispatch(unSelectedConversation());
+    dispatch(unSelecteFriend());
+  };
+
   return (
     <Stack
       width="100%"
@@ -34,13 +51,7 @@ const Head = ({ selectedFriend }) => {
       bgcolor="rgba(148,163,184,0.2)"
     >
       {isBoxVissible ? (
-        <Box
-          width="100%"
-          height="100%"
-          padding={1}
-          paddingX={4}
-          className="head2"
-        >
+        <Box width="100%" height="100%" paddingX={4} className="head2">
           <Stack
             direction="row"
             justifyContent="center"
@@ -66,7 +77,7 @@ const Head = ({ selectedFriend }) => {
                 }
               />
             </FormControl>
-            <Box width="20%" height="100%">
+            <Box>
               <Stack
                 direction="row"
                 justifyContent="space-around"
@@ -91,28 +102,37 @@ const Head = ({ selectedFriend }) => {
         <Box
           width="100%"
           padding={1}
-          paddingX={4}
           display="flex"
           justifyContent="space-between"
           alignItems="center"
           className="head1"
         >
-          <Box display="flex" gap={3} className="user-info">
+          <Stack direction="row" spacing={3} className="user-info">
+            <Hidden smUp>
+              <IconButton
+                onClick={handleUnselectConversation}
+                sx={{ fontSize: "22px", fontWeight: "bolder", color: "purple" }}
+              >
+                <ArrowBack />
+              </IconButton>
+            </Hidden>
             <Box>
-              <img
+              <Avatar
+                sx={{ width: "40px", height: "40px" }}
                 src={selectedFriend?.image}
                 alt={selectedFriend?.name}
-                className="w-[40px] h-[40px] rounded-full"
               />
             </Box>
-            <div>
-              <h1 className="name font-bold text-lg">{selectedFriend?.name}</h1>
-              <p className="name text-sm">
+            <Box>
+              <h1 className="name lg:font-bold lg:text-lg max-sm:text-sm">
+                {selectedFriend?.name}
+              </h1>
+              <p className="name text-xs">
                 Active {format(selectedFriend.updatedAt)}
               </p>
-            </div>
-          </Box>
-          <Box display="flex" gap={3}>
+            </Box>
+          </Stack>
+          <Stack direction="row" spacing={3}>
             <IconButton title="audio call">
               <Call color="secondary" />
             </IconButton>
@@ -128,7 +148,7 @@ const Head = ({ selectedFriend }) => {
             <IconButton title="more">
               <MoreHoriz color="secondary" />
             </IconButton>
-          </Box>
+          </Stack>
         </Box>
       )}
     </Stack>

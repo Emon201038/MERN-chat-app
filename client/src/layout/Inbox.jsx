@@ -8,6 +8,7 @@ import Conversation from "../pages/Conversation";
 import ProfileModal from "../Modals/ProfileModal";
 import { connectSocket } from "../socket";
 import { useSelector } from "react-redux";
+import { Hidden } from "@mui/material";
 
 function Inbox() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,17 +57,21 @@ function Inbox() {
 
   return (
     <div className="flex w-[100vw]  h-[100vh] overflow-hidden">
-      <Sidebar setIsModalOpen={setIsModalOpen} />
+      <Hidden smDown>
+        <Sidebar setIsModalOpen={setIsModalOpen} />
+      </Hidden>
       <Contacts
         setIsFriendModalOpen={setIsFriendModalOpen}
         request={request}
         setRequest={setRequest}
+        arrivalMessage={arrivalMessage}
       />
       <Conversation
         request={request}
         socket={socket}
         arrivalMessage={arrivalMessage}
       />
+
       {isModalOpen && (
         <ProfileModal
           setIsModalOpen={setIsModalOpen}

@@ -31,7 +31,6 @@ export const conversationSlice = apiSlice.injectEndpoints({
                     u._id !== arg && users?.some((usr) => usr.userId == u._id)
                   );
                 });
-                console.log(JSON.stringify(matchedUser, "online User"));
                 if (matchedUser) {
                   matchedUser.status = "online";
                 }
@@ -44,7 +43,6 @@ export const conversationSlice = apiSlice.injectEndpoints({
                         return data?.some((usr) => usr?.userId == u._id);
                       }
                     );
-                    console.log(JSON.stringify(matchedUser));
                     if (matchedUser) {
                       matchedUser.status = "offline";
                     }

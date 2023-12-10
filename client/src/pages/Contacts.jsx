@@ -5,7 +5,6 @@ import { useGetConversationsQuery } from "../features/conversations/conversation
 import {
   Archive,
   Mail,
-  Menu,
   People,
   Search,
   Settings,
@@ -15,7 +14,6 @@ import {
 import {
   Avatar,
   Box,
-  Drawer,
   FormControl,
   Hidden,
   IconButton,
@@ -31,9 +29,19 @@ import {
 } from "@mui/material";
 import { socket } from "../socket";
 import { useSelector } from "react-redux";
+import SideBarItems from "../layout/SideBarItems";
+import Conversation from "./Conversation";
+import MobileConversation from "../components/conversation/MobileConversation";
+import Head from "../components/conversation/Head";
+import Messages from "../components/conversation/Messages";
 
 /*eslint-disable react/prop-types */
-const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
+const Contacts = ({
+  setIsFriendModalOpen,
+  request,
+  setRequest,
+  arrivalMessage,
+}) => {
   const [conversations, setConversations] = useState([]);
   const [onlineUser, setOnlineUser] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -43,6 +51,7 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
   const { data, isLoading, isError, error } = useGetConversationsQuery(
     user._id
   );
+  const { selectedConversation } = useSelector((state) => state.conversation);
 
   useEffect(() => {
     socket?.on("getUsers", (data) => {
@@ -195,63 +204,48 @@ const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
 
   return (
     <>
-      <div className="contacts h-full w-[320px] max-sm:w-full max-sm:px-2 flex flex-col items-center border-r-2">
-        <div className="head flex justify-between w-full px-5 max-sm:pl-0  mt-[20px] font-bold text-lg">
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Hidden smUp>
-              <IconButton onClick={toggleDrawer(true)}>
-                <Menu />
-              </IconButton>
-            </Hidden>
-            <Hidden smUp>
-              <Drawer
-                anchor="left"
-                open={drawerOpen}
-                onClose={toggleDrawer(false)}
-                PaperProps={{ style: { width: "75%" } }}
-              >
-                <div>{list("left")}</div>
-              </Drawer>
-            </Hidden>
-            <h2>Chat</h2>
-          </Stack>
-          <div className="flex justify-center items-center w-[30px] h-[30px]">
-            <IconButton
-              sx={{ width: "45px", height: "45px" }}
-              onClick={() => setIsFriendModalOpen(true)}
-            >
-              <People />
-            </IconButton>
-          </div>
-        </div>
-        <div className="search-input p-2 w-full my-2">
-          <FormControl sx={{ width: "100%" }}>
-            <OutlinedInput
-              size="small"
-              id="input-with-icon-adornment"
-              placeholder="Search in conversation"
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton>
-                    <Search color="primary" />
-                  </IconButton>
-                </InputAdornment>
-              }
+      <Hidden smDown={selectedConversation !== null}>
+        <div className="contacts h-full w-[320px] max-sm:w-full max-sm:px-2 flex flex-col items-center border-r-2">
+          <div className="head flex justify-between w-full px-5 max-sm:pl-0  mt-[20px] font-bold text-lg">
+            <SideBarItems
+              toggleDrawer={toggleDrawer}
+              drawerOpen={drawerOpen}
+              list={list}
             />
-          </FormControl>
-        </div>
-        <div className="container-contact w-full h-full overflow-y-auto">
-          <OnlinePeople onlineUser={onlineUser} />
-          <div className="all-contact w-full flex flex-col gap-1 flex-grow  overflow-y-scroll">
-            {content}
+            <div className="flex justify-center items-center w-[30px] h-[30px]">
+              <IconButton
+                sx={{ width: "45px", height: "45px" }}
+                onClick={() => setIsFriendModalOpen(true)}
+              >
+                <People />
+              </IconButton>
+            </div>
+          </div>
+          <div className="search-input p-2 w-full my-2">
+            <FormControl sx={{ width: "100%" }}>
+              <OutlinedInput
+                size="small"
+                id="input-with-icon-adornment"
+                placeholder="Search in conversation"
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <Search color="primary" />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </div>
+          <div className="container-contact w-full h-full overflow-y-auto">
+            <OnlinePeople onlineUser={onlineUser} />
+            <div className="all-contact w-full flex flex-col gap-1 flex-grow  overflow-y-scroll">
+              {content}
+            </div>
           </div>
         </div>
-      </div>
+      </Hidden>
+      <Hidden smUp>{selectedConversation && <MobileConversation />}</Hidden>
     </>
   );
 };
