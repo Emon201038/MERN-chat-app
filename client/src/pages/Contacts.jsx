@@ -30,18 +30,10 @@ import {
 import { socket } from "../socket";
 import { useSelector } from "react-redux";
 import SideBarItems from "../layout/SideBarItems";
-import Conversation from "./Conversation";
 import MobileConversation from "../components/conversation/MobileConversation";
-import Head from "../components/conversation/Head";
-import Messages from "../components/conversation/Messages";
 
 /*eslint-disable react/prop-types */
-const Contacts = ({
-  setIsFriendModalOpen,
-  request,
-  setRequest,
-  arrivalMessage,
-}) => {
+const Contacts = ({ setIsFriendModalOpen, request, setRequest }) => {
   const [conversations, setConversations] = useState([]);
   const [onlineUser, setOnlineUser] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Reply, Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import { useGetFriendsRequestQuery } from "../../features/friends/friendsApi";
 import useDebounce from "../../Hooks/useDebounce";
+import { CircularProgress, Stack } from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const FriendRequests = () => {
@@ -32,11 +33,9 @@ const FriendRequests = () => {
 
   if (isLoading) {
     content = (
-      <div className=" flex justify-center items-center h-[50px] ">
-        <div className="animate-spin h-[40px] w-[40px]  text-blue-500 ">
-          <Reply />
-        </div>
-      </div>
+      <Stack width="100%" justifyContent="center" alignItems="center">
+        <CircularProgress sx={{ width: "20px", height: "20px" }} />
+      </Stack>
     );
   }
   if (!isLoading && isError) {

@@ -4,10 +4,10 @@ import useDebounce from "../../Hooks/useDebounce";
 import {
   CloseOutlined,
   ModeCommentOutlined,
-  Replay,
   Search,
   Send,
 } from "@mui/icons-material";
+import { CircularProgress, Stack } from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const GetUsers = ({
@@ -47,11 +47,9 @@ const GetUsers = ({
 
   if (isLoading) {
     content = (
-      <div className=" flex justify-center items-center h-[50px] ">
-        <div className="animate-spin h-[40px] w-[40px]  text-blue-500 ">
-          <Replay />
-        </div>
-      </div>
+      <Stack width="100%" justifyContent="center" alignItems="center">
+        <CircularProgress sx={{ width: "20px", height: "20px" }} />
+      </Stack>
     );
   }
   if (!isLoading && isError) {

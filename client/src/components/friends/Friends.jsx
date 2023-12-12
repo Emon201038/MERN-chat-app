@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGetFriendsQuery } from "../../features/friends/friendsApi";
 import useDebounce from "../../Hooks/useDebounce";
 import { ModeCommentOutlined, Search } from "@mui/icons-material";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 
 /*eslint-disable react/prop-types*/
 const Friends = () => {
@@ -28,9 +28,9 @@ const Friends = () => {
   let content = null;
   if (isLoading) {
     content = (
-      <div className=" flex justify-center items-center h-[50px] ">
-        <CircularProgress />
-      </div>
+      <Stack width="100%" justifyContent="center" alignItems="center">
+        <CircularProgress sx={{ width: "20px", height: "20px" }} />
+      </Stack>
     );
   }
   if (!isLoading && isError) {

@@ -25,7 +25,6 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isCreated = location.state && location.state?.createdUser;
-  console.log(isCreated);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

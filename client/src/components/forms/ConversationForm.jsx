@@ -1,5 +1,11 @@
-import { EmojiEmotions } from "@mui/icons-material";
-import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
+import { EmojiEmotions, Send, ThumbUp } from "@mui/icons-material";
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { socket } from "../../socket";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -18,7 +24,7 @@ const ConversationForm = () => {
   const { user } = useSelector((state) => state.auth);
   const { selectedConversation } = useSelector((state) => state.conversation);
   const { selectedFriend } = useSelector((state) => state.friend);
-  const [sentMessage] = useSentMessageMutation();
+  const [sentMessage, { isLoading }] = useSentMessageMutation();
 
   const handleSentMessage = async (e) => {
     e.preventDefault();
@@ -98,7 +104,7 @@ const ConversationForm = () => {
     }, timerLength);
   };
   return (
-    <form onSubmit={handleSentMessage} className="w-[85%] h-[35px]">
+    <form onSubmit={handleSentMessage} className="w-full h-[35px]">
       {isTyping && (
         <div className="w-[60px] h-[20px] absolute top-[-40px] left-9 bg-white">
           <Lottie
@@ -110,12 +116,19 @@ const ConversationForm = () => {
           />
         </div>
       )}
-      <Box width="100%" height="100%" position="relative">
+      <Stack
+        width="100%"
+        height="100%"
+        position="relative"
+        direction="row"
+        justifyContent="center"
+        spacing={2}
+      >
         <TextField
           required
           type="text"
           sx={{
-            width: "100%",
+            width: "93%",
             height: "35px",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
@@ -154,7 +167,34 @@ const ConversationForm = () => {
             ),
           }}
         />
-      </Box>
+        <Box width="7%">
+          {inputValue?.length === 0 ? (
+            <IconButton
+              sx={{
+                width: "30px",
+                height: "30px",
+                color: "#1974d2",
+                fontSize: "25px",
+              }}
+            >
+              <ThumbUp />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={handleSentMessage}
+              disabled={isLoading}
+              sx={{
+                width: "30px",
+                height: "30px",
+                color: "#1974d2",
+                fontSize: "25px",
+              }}
+            >
+              <Send />
+            </IconButton>
+          )}
+        </Box>
+      </Stack>
     </form>
   );
 };

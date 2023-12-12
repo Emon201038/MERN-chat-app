@@ -16,7 +16,7 @@ const Messages = () => {
     useGetMessagesQuery(selectedConversation, { skip: false }) || {};
   const dispatch = useDispatch();
 
-  const { totalPage, currentPage, nextPage } = data?.payload?.pagination || {};
+  const { totalPage, nextPage } = data?.payload?.pagination || {};
 
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);

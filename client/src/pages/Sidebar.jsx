@@ -7,10 +7,38 @@ import {
   MessageOutlined,
   Storefront,
 } from "@mui/icons-material";
+import { useState } from "react";
+import Preference from "../Modals/Preference";
 
 /*eslint-disable react/prop-types */
-const Sidebar = ({ setIsModalOpen }) => {
+const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (id) => {
+    if (id === 1) {
+      setOpen(true);
+    }
+  };
+
+  const iconList = [
+    {
+      icon: <Chat />,
+      id: 1,
+    },
+    {
+      icon: <Storefront />,
+      id: 2,
+    },
+    {
+      icon: <MessageOutlined />,
+      id: 3,
+    },
+    {
+      icon: <ArchiveRounded />,
+      id: 4,
+    },
+  ];
 
   return (
     <>
@@ -34,23 +62,21 @@ const Sidebar = ({ setIsModalOpen }) => {
           >
             <img src={logo} alt="" className="[20px] h-[20px]" />
           </IconButton>
-          <IconButton sx={{ width: "45px", height: "45px" }}>
-            <Chat sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
-          <IconButton sx={{ width: "45px", height: "45px" }}>
-            <Storefront sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
-          <IconButton sx={{ width: "45px", height: "45px" }}>
-            <MessageOutlined sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
-          <IconButton sx={{ width: "45px", height: "45px" }}>
-            <ArchiveRounded sx={{ width: "20px", height: "20px" }} />
-          </IconButton>
+          {iconList.map((item) => (
+            <IconButton
+              key={item.id}
+              sx={{ width: "45px", height: "45px" }}
+              onClick={() => handleOpen(item.id)}
+            >
+              {item.icon}
+            </IconButton>
+          ))}
         </Stack>
+        <Preference open={open} setOpen={setOpen} />
         <div
           className="boreder-[1px] border-gray-400 mb-2 w-full h-[45px] flex justify-center items-center cursor-pointer"
           title={user?.name}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setOpen(true)}
         >
           <img
             src={user?.image}

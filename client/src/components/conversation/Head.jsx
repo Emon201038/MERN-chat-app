@@ -23,7 +23,6 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { unSelectedConversation } from "../../features/conversations/conversationSlice";
 import { unSelecteFriend } from "../../features/friends/friendSlice";
-import { useNavigate } from "react-router-dom";
 
 /*eslint-disable react/prop-types */
 const Head = () => {
@@ -31,7 +30,6 @@ const Head = () => {
   const { selectedFriend } = useSelector((state) => state.friend);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleUnselectConversation = () => {
     dispatch(unSelectedConversation());
@@ -107,11 +105,18 @@ const Head = () => {
           alignItems="center"
           className="head1"
         >
-          <Stack direction="row" spacing={3} className="user-info">
+          <Stack
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            spacing={3}
+            className="user-info"
+          >
             <Hidden smUp>
               <IconButton
                 onClick={handleUnselectConversation}
-                sx={{ fontSize: "22px", fontWeight: "bolder", color: "purple" }}
+                color="secondary"
+                sx={{ width: "40px", height: "40px" }}
               >
                 <ArrowBack />
               </IconButton>
