@@ -23,6 +23,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { unSelectedConversation } from "../../features/conversations/conversationSlice";
 import { unSelecteFriend } from "../../features/friends/friendSlice";
+import { useTheme } from "@mui/material/styles";
 
 /*eslint-disable react/prop-types */
 const Head = () => {
@@ -30,6 +31,8 @@ const Head = () => {
   const { selectedFriend } = useSelector((state) => state.friend);
 
   const dispatch = useDispatch();
+  const theme = useTheme();
+  console.log(theme);
 
   const handleUnselectConversation = () => {
     dispatch(unSelectedConversation());
@@ -46,7 +49,9 @@ const Head = () => {
       justifyContent="center"
       alignItems="center"
       borderBottom="2px"
-      bgcolor="rgba(148,163,184,0.2)"
+      bgcolor={
+        theme.palette.mode === "light" ? "rgba(148,163,184,0.2)" : "#121212"
+      }
     >
       {isBoxVissible ? (
         <Box width="100%" height="100%" paddingX={4} className="head2">

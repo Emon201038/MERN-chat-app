@@ -9,6 +9,8 @@ import {
 import { socket } from "../../socket";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useTheme } from "@mui/material/styles";
+
 import Lottie from "lottie-react";
 import animationData from "../../animation/animation.json";
 import { useSentMessageMutation } from "../../features/conversations/conversationsApi";
@@ -25,6 +27,8 @@ const ConversationForm = () => {
   const { selectedConversation } = useSelector((state) => state.conversation);
   const { selectedFriend } = useSelector((state) => state.friend);
   const [sentMessage, { isLoading }] = useSentMessageMutation();
+
+  const { palette } = useTheme();
 
   const handleSentMessage = async (e) => {
     e.preventDefault();
@@ -150,7 +154,8 @@ const ConversationForm = () => {
               width: "100%",
               height: "35px",
               borderRadius: "999px",
-              bgcolor: "rgb(203,213,225) ",
+              bgcolor:
+                palette.mode === "dark" ? "#3c3c3c " : "rgb(226,232,240)",
             },
             endAdornment: (
               <InputAdornment position="end">

@@ -8,6 +8,7 @@ import Message from "./Message";
 import { Alert, CircularProgress, Stack } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
+import { useTheme } from "@mui/material/styles";
 
 /*eslint-disable react/prop-types */
 const Messages = () => {
@@ -15,6 +16,7 @@ const Messages = () => {
   const { data, isLoading, isError, error } =
     useGetMessagesQuery(selectedConversation, { skip: false }) || {};
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const { totalPage, nextPage } = data?.payload?.pagination || {};
 
@@ -68,7 +70,11 @@ const Messages = () => {
   }
   if (!isLoading && !isError && data?.payload?.messages?.length > 0) {
     content = (
-      <div className="conversations-container h-[calc(100%_ - _120px)] relative  flex flex-col-reverse">
+      <div
+        className={`conversations-container h-[calc(100%_ - _120px)] relative  flex flex-col-reverse ${
+          theme.palette.mode === "dark" ? "bg-[#1e1e1e]" : ""
+        }`}
+      >
         <InfiniteScroll
           dataLength={data?.payload.messages.length}
           next={fetchMore}

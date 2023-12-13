@@ -1,6 +1,13 @@
 import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material";
+import { useTheme } from "../../context/ThemeProvider";
 
 const Apperance = ({ theme, setTheme }) => {
+  const { toggleTheme } = useTheme();
+  const handleChange = (e) => {
+    setTheme(e.target.value);
+    toggleTheme();
+  };
+
   return (
     <div>
       <div>
@@ -20,12 +27,12 @@ const Apperance = ({ theme, setTheme }) => {
             <Select
               value={theme}
               label="Age"
-              onChange={(e) => setTheme(e.target.value)}
+              onChange={handleChange}
               inputProps={{ "aria-label": "Without label" }}
               sx={{ height: "40px" }}
             >
-              <MenuItem value="light">Light</MenuItem>
               <MenuItem value="dark">Dark</MenuItem>
+              <MenuItem value="light">Light</MenuItem>
             </Select>
           </FormControl>
         </Box>

@@ -5,28 +5,14 @@ import {
   Settings,
 } from "@mui/icons-material";
 import { Box, Grid, Modal, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
+
 import ActiveStatus from "../components/preferences/ActiveStatus";
 import Notification from "../components/preferences/Notification";
 import Apperance from "../components/preferences/Apperance";
 import Profile from "../components/preferences/Profile";
 import LogoutPage from "../components/preferences/Logout";
-
-const style = {
-  position: "absolute",
-  top: "85%",
-  left: "12%",
-  transform: "translate(-50%, -50%)",
-  width: 300,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 1.5,
-  cursor: "default",
-  outline: "none",
-  "&:hover": {
-    bgcolor: "lightgray",
-  },
-};
 
 const profileStyle = {
   position: "absolute",
@@ -47,7 +33,26 @@ const Preference = ({ open, setOpen }) => {
   const [selectedSetting, setSelectedSetting] = useState(1);
   const [checkedActiveStatus, setCheckedActiveStatus] = useState(true);
   const [checkedNotification, setCheckedNotification] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const storedTheme = localStorage.getItem("theme");
+  const [theme, setTheme] = useState(storedTheme);
+  const currentTheme = useTheme();
+
+  const style = {
+    position: "absolute",
+    top: "85%",
+    left: "12%",
+    transform: "translate(-50%, -50%)",
+    width: 300,
+    bgcolor:
+      currentTheme.palette.mode === "dark" ? "#3c3c3c" : "background.paper",
+    boxShadow: 24,
+    p: 1.5,
+    cursor: "default",
+    outline: "none",
+    "&:hover": {
+      bgcolor: currentTheme.palette.mode === "dark" ? "#606060" : "lightgray",
+    },
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -98,21 +103,24 @@ const Preference = ({ open, setOpen }) => {
       icon: <DarkMode />,
       title: "Appearance",
       subTitle: "Theme:" + theme,
-      bgColor: "black",
+      bgColor: currentTheme.palette.mode === "dark" ? "white" : "black",
+      color: currentTheme.palette.mode === "dark" ? "black" : "white",
     },
     {
       id: 4,
       icon: <Settings color="white" />,
       title: "Profile",
       subTitle: "",
-      bgColor: "black",
+      bgColor: currentTheme.palette.mode === "dark" ? "white" : "black",
+      color: currentTheme.palette.mode === "dark" ? "black" : "white",
     },
     {
       id: 5,
       icon: <Logout color="white" />,
       title: "Logout",
       subTitle: "",
-      bgColor: "black",
+      bgColor: currentTheme.palette.mode === "dark" ? "white" : "black",
+      color: currentTheme.palette.mode === "dark" ? "black" : "white",
     },
   ];
 
@@ -156,7 +164,11 @@ const Preference = ({ open, setOpen }) => {
   return (
     <div>
       <Modal open={open} onClose={handleClose}>
-        <Box sx={style} onClick={combinedListener}>
+        <Box
+          bgcolor={currentTheme.palette.mode === "dark" && "#3c3c3c"}
+          sx={style}
+          onClick={combinedListener}
+        >
           <Stack direction="row" spacing={2} border="none">
             <Settings />
             <Typography variant="body1" fontWeight="bold">
@@ -181,7 +193,12 @@ const Preference = ({ open, setOpen }) => {
                       padding={1}
                       onClick={() => handleSelect(data.id)}
                       sx={{
-                        bgcolor: selectedSetting === data.id && "lightgray",
+                        bgcolor:
+                          selectedSetting === data.id
+                            ? currentTheme.palette.mode === "dark"
+                              ? "#3c3c3c"
+                              : "lightgray"
+                            : "",
                       }}
                     >
                       <Stack
@@ -191,7 +208,7 @@ const Preference = ({ open, setOpen }) => {
                         alignItems="center"
                         borderRadius="50%"
                         bgcolor={data.bgColor}
-                        color="white"
+                        color={data?.color ? data.color : "white"}
                       >
                         {data.icon}
                       </Stack>

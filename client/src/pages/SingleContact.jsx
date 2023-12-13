@@ -7,6 +7,7 @@ import { selecteFriend } from "../features/friends/friendSlice";
 import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CheckCircle } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
 // import { useNavigate } from "react-router-dom";
 /*eslint-disable react/prop-types */
 const SingleContact = ({
@@ -18,6 +19,7 @@ const SingleContact = ({
 }) => {
   const [friends, setFriends] = useState(null);
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   useEffect(() => {
     const friend = conversation.participients.find(
@@ -97,9 +99,13 @@ const SingleContact = ({
 
   return (
     <div
-      className={`single-contact hover:bg-gray-100  w-full h-[70px]  flex items-center justify-between p-1 ${
-        isSelected ? "bg-slate-300" : "bg-white"
-      }`}
+      className={`single-contact ${
+        isSelected
+          ? theme.palette.mode === "dark"
+            ? "bg-[#3c3c3c]"
+            : "bg-slate-200"
+          : ""
+      }  w-full h-[70px]  flex items-center justify-between p-1 `}
       onClick={() =>
         handleClick(conversation?._id, {
           _id: friends._id,
@@ -112,7 +118,7 @@ const SingleContact = ({
     >
       <div className="flex gap-3">
         <div className="avatar w-[40px] h-[40px]  rounded-full flex-shrink-0 relative">
-          {friends?.status === "online" ? (
+          {friends?.status == "online" ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

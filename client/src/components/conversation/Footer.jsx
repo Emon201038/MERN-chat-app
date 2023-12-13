@@ -1,9 +1,11 @@
 import { AddCircle, Image, Mic } from "@mui/icons-material";
 import { Hidden, IconButton, Stack } from "@mui/material";
 import ConversationForm from "../forms/ConversationForm";
+import { useTheme } from "@mui/material/styles";
 
 /*eslint-disable react/prop-types */
 const Footer = () => {
+  const { palette } = useTheme();
   const iconButtonsData = [
     {
       icon: <AddCircle sx={{ color: "rgb(192,132,252)" }} />,
@@ -16,7 +18,11 @@ const Footer = () => {
     // Add more objects as needed
   ];
   return (
-    <div className="form relative w-full h-[60px] flex justify-center items-center">
+    <div
+      className={`form relative w-full h-[60px] flex justify-center items-center ${
+        palette.mode === "dark" ? "bg-[#1e1e1e]" : ""
+      }`}
+    >
       <Stack
         direction="row"
         width="100%"

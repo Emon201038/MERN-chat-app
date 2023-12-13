@@ -8,18 +8,14 @@ import {
   Storefront,
 } from "@mui/icons-material";
 import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 import Preference from "../Modals/Preference";
 
 /*eslint-disable react/prop-types */
 const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
-
-  const handleOpen = (id) => {
-    if (id === 1) {
-      setOpen(true);
-    }
-  };
+  const theme = useTheme();
 
   const iconList = [
     {
@@ -42,7 +38,11 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="side-bar max-sm:hidden h-full flex flex-col justify-between w-[80px] bg-slate-200">
+      <div
+        className={`side-bar max-sm:hidden h-full flex flex-col justify-between w-[80px] ${
+          theme.palette.mode === "dark" ? "bg-[#3c3c3c]" : "bg-slate-200"
+        }`}
+      >
         <Stack
           direction={"column"}
           spacing={"20px"}
@@ -63,11 +63,7 @@ const Sidebar = () => {
             <img src={logo} alt="" className="[20px] h-[20px]" />
           </IconButton>
           {iconList.map((item) => (
-            <IconButton
-              key={item.id}
-              sx={{ width: "45px", height: "45px" }}
-              onClick={() => handleOpen(item.id)}
-            >
+            <IconButton key={item.id} sx={{ width: "45px", height: "45px" }}>
               {item.icon}
             </IconButton>
           ))}
