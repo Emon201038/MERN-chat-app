@@ -12,7 +12,6 @@ import ActiveStatus from "../components/preferences/ActiveStatus";
 import Notification from "../components/preferences/Notification";
 import Apperance from "../components/preferences/Apperance";
 import Profile from "../components/preferences/Profile";
-import LogoutPage from "../components/preferences/Logout";
 
 const profileStyle = {
   position: "absolute",
@@ -20,6 +19,8 @@ const profileStyle = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 550,
+  height: 350,
+  overflowY: "auto",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 0,
@@ -152,13 +153,6 @@ const Preference = ({ open, setOpen }) => {
     case 4:
       renderComponent = <Profile />;
       break;
-    case 5:
-      renderComponent = <LogoutPage />;
-      break;
-
-    default:
-      renderComponent = <ActiveStatus />;
-      break;
   }
 
   return (
@@ -182,7 +176,13 @@ const Preference = ({ open, setOpen }) => {
         <Box sx={profileStyle}>
           <Stack direction="row" spacing={2}>
             <Grid container spacing={1}>
-              <Grid item lg={6} md={6} borderRight="1px solid lightgray">
+              <Grid
+                item
+                lg={6}
+                md={6}
+                borderRight="1px solid lightgray"
+                overflowY="auto"
+              >
                 <Stack spacing={1}>
                   {iconData.map((data) => (
                     <Stack

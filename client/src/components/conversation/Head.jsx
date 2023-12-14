@@ -32,7 +32,6 @@ const Head = () => {
 
   const dispatch = useDispatch();
   const theme = useTheme();
-  console.log(theme);
 
   const handleUnselectConversation = () => {
     dispatch(unSelectedConversation());
