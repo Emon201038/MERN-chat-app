@@ -77,7 +77,7 @@ const Conversation = ({ request, arrivalMessage }) => {
     );
   } else {
     content = (
-      <div className="conversations w-full max-sm:hidden  bg-white">
+      <div className="conversations flex-grow max-sm:hidden  bg-white">
         <div className="wrapper w-full h-full flex flex-col">
           <Head selectedFriend={selectedFriend} />
           <Messages skip={request} />

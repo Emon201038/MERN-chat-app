@@ -208,14 +208,14 @@ const handleActivateUser = async (req, res, next) => {
 const handleEditUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, phone } = req.body;
     const updateOptions = {
       new: true,
       context: query,
     };
     const editedUser = await User.findByIdAndUpdate(
       id,
-      { name },
+      { name, phone },
       updateOptions
     );
 

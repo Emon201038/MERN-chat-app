@@ -15,6 +15,15 @@ import Login from "./components/forget password/LoginForm";
 import CodeVerification from "./components/forget password/CodeVerification";
 import { Paper } from "@mui/material";
 import ThemeProvider from "./context/ThemeProvider";
+import EditUser from "./pages/EditUser";
+import Profile from "./layout/Profile";
+import MessageRequests from "./components/MessageRequests";
+import Layout from "./components/Layout";
+import Store from "./components/Store";
+import ArchivedMessage from "./components/ArchivedMessage";
+import Calls from "./components/contact/footer contact/Calls";
+import People from "./components/contact/footer contact/People";
+import Stories from "./components/contact/footer contact/Stories";
 
 function App() {
   const authChecked = useAuthCheck();
@@ -43,7 +52,85 @@ function App() {
                   <Inbox />
                 </PrivateRoute>
               }
-            ></Route>
+            />
+            <Route
+              path="/profile"
+              exact
+              element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile/edit/:id"
+              exact
+              element={
+                <PrivateRoute>
+                  <EditUser />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/message-requests"
+              exact
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <MessageRequests />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/store"
+              exact
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Store />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/archived-messages"
+              exact
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <ArchivedMessage />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/calls"
+              exact
+              element={
+                <PrivateRoute>
+                  <Calls />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/people"
+              exact
+              element={
+                <PrivateRoute>
+                  <People />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/stories"
+              exact
+              element={
+                <PrivateRoute>
+                  <Stories />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/registration"
               element={

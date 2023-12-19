@@ -4,6 +4,7 @@ import authSlice from "./auth/authSlice";
 import ContactSlice from "./friends/friendsApi";
 import conversationSlice from "./conversations/conversationSlice";
 import friendSlice from "./friends/friendSlice";
+import sideNavSllice from "./side nav/sideNavSllice";
 
 const reduxStore = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const reduxStore = configureStore({
     friends: ContactSlice,
     friend: friendSlice,
     conversation: conversationSlice,
+    sideNav: sideNavSllice,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares().concat(apiSlice.middleware),

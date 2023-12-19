@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   selectedConversation: null,
-  socketServer: {},
 };
 
 const conversationSlice = createSlice({

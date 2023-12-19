@@ -5,7 +5,6 @@ import Footer from "./Footer";
 import { useSelector } from "react-redux";
 const MobileConversation = () => {
   const { selectedConversation } = useSelector((state) => state.conversation);
-  console.log(selectedConversation);
   return (
     <Stack width="100vw" height="100vh">
       <Head />

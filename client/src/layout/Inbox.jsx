@@ -9,9 +9,9 @@ import ProfileModal from "../Modals/ProfileModal";
 import { connectSocket } from "../socket";
 import { useSelector } from "react-redux";
 import { Hidden } from "@mui/material";
+import Layout from "../components/Layout";
 
 function Inbox() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFriendModalOpen, setIsFriendModalOpen] = useState(false);
   const [request, setRequest] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -56,10 +56,7 @@ function Inbox() {
   }, [loggedInUser]);
 
   return (
-    <div className="flex w-[100vw]  h-[100vh] overflow-hidden">
-      <Hidden smDown>
-        <Sidebar setIsModalOpen={setIsModalOpen} />
-      </Hidden>
+    <Layout>
       <Contacts
         setIsFriendModalOpen={setIsFriendModalOpen}
         request={request}
@@ -71,19 +68,35 @@ function Inbox() {
         socket={socket}
         arrivalMessage={arrivalMessage}
       />
+    </Layout>
+    // <div className="flex w-[100vw]  h-[100vh] overflow-hidden">
+    //   <Hidden smDown>
+    //     <Sidebar />
+    //   </Hidden>
+    //   <Contacts
+    //     setIsFriendModalOpen={setIsFriendModalOpen}
+    //     request={request}
+    //     setRequest={setRequest}
+    //     arrivalMessage={arrivalMessage}
+    //   />
+    //   <Conversation
+    //     request={request}
+    //     socket={socket}
+    //     arrivalMessage={arrivalMessage}
+    //   />
 
-      {isModalOpen && (
-        <ProfileModal
-          setIsModalOpen={setIsModalOpen}
-          handleLogout={handleLogout}
-          request={request}
-          setRequest={setRequest}
-        />
-      )}
-      {isFriendModalOpen && (
-        <FriendsModal setIsFriendModalOpen={setIsFriendModalOpen} />
-      )}
-    </div>
+    //   {/* {isModalOpen && (
+    //     <ProfileModal
+    //       setIsModalOpen={setIsModalOpen}
+    //       handleLogout={handleLogout}
+    //       request={request}
+    //       setRequest={setRequest}
+    //     /> */}
+    //   {/* )} */}
+    //   {isFriendModalOpen && (
+    //     <FriendsModal setIsFriendModalOpen={setIsFriendModalOpen} />
+    //   )}
+    // </div>
   );
 }
 

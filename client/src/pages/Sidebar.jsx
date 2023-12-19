@@ -1,6 +1,5 @@
-import logo from "../images/chat-app-icon-5.jpg";
-import { useSelector } from "react-redux";
-import { IconButton, Stack } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { Avatar, Box, IconButton, Stack } from "@mui/material";
 import {
   ArchiveRounded,
   Chat,
@@ -10,78 +9,112 @@ import {
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import Preference from "../Modals/Preference";
+import { useNavigate } from "react-router-dom";
+import { selecteNav } from "../features/side nav/sideNavSllice";
 
 /*eslint-disable react/prop-types */
 const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);
+  const { selectedIcon: selectedNav } = useSelector((state) => state.sideNav);
   const [open, setOpen] = useState(false);
   const theme = useTheme();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const iconList = [
     {
-      icon: <Chat />,
       id: 1,
+      icon: <Chat />,
+      link: "/inbox",
     },
     {
-      icon: <Storefront />,
       id: 2,
+      icon: <Storefront />,
+      link: "/store",
     },
     {
-      icon: <MessageOutlined />,
       id: 3,
+      icon: <MessageOutlined />,
+      link: "/message-requests",
     },
     {
-      icon: <ArchiveRounded />,
       id: 4,
+      icon: <ArchiveRounded />,
+      link: "/archived-messages",
+    },
+    {
+      id: 5,
+      icon: (
+        <Avatar
+          sx={{
+            width: "30px",
+            height: "30px",
+            textAlign: "center",
+            margin: "auto",
+            mb: "10px",
+          }}
+          src={user.image}
+          title={user?.name}
+          onClick={() => handleSelectIcon(5)}
+        />
+      ),
+      link: "/profile",
     },
   ];
 
+  const handleSelectIcon = (id, link) => {
+    dispatch(selecteNav(id));
+    navigate(link);
+  };
+
+  const handleSelectProfile = (id, link) => {
+    dispatch(selecteNav(id));
+    navigate(link);
+  };
+
   return (
-    <>
-      <div
-        className={`side-bar max-sm:hidden h-full flex flex-col justify-between w-[80px] ${
-          theme.palette.mode === "dark" ? "bg-[#3c3c3c]" : "bg-slate-200"
-        }`}
+    <div
+      className={`side-bar max-sm:hidden h-full w-[80px] ${
+        theme.palette.mode === "dark" ? "bg-[#3c3c3c]" : "bg-slate-200"
+      }`}
+    >
+      <Stack
+        width="100%"
+        height="100%"
+        marginTop={"8px"}
+        justifyContent="space-between"
+        alignItems="center"
       >
-        <Stack
-          direction={"column"}
-          spacing={"20px"}
-          alignItems={"center"}
-          marginTop={"8px"}
-        >
-          <IconButton
-            sx={{
-              width: "45px",
-              height: "45px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              bgcolor: "rgb(203 213 225)",
-              borderRadius: "6px",
-            }}
-          >
-            <img src={logo} alt="" className="[20px] h-[20px]" />
-          </IconButton>
-          {iconList.map((item) => (
-            <IconButton key={item.id} sx={{ width: "45px", height: "45px" }}>
-              {item.icon}
-            </IconButton>
+        <Stack direction="column" spacing={2}>
+          {iconList.slice(0, 4).map((item) => (
+            <Box key={item.id} onClick={() => navigate(item.link)}>
+              <IconButton
+                sx={{
+                  width: "45px",
+                  height: "45px",
+                  bgcolor: selectedNav === item.id ? "rgb(203 213 225)" : "",
+                }}
+                onClick={() => handleSelectIcon(item.id, item.link)}
+              >
+                {item.icon}
+              </IconButton>
+            </Box>
           ))}
         </Stack>
-        <Preference open={open} setOpen={setOpen} />
-        <div
-          className="boreder-[1px] border-gray-400 mb-2 w-full h-[45px] flex justify-center items-center cursor-pointer"
-          title={user?.name}
-          onClick={() => setOpen(true)}
+        <IconButton
+          onClick={() => handleSelectProfile(iconList[4].id, iconList[4].link)}
+          sx={{
+            width: "45px",
+            height: "45px",
+            mb: "10px",
+            bgcolor: selectedNav === iconList[4].id ? "rgb(203 213 225)" : "",
+          }}
         >
-          <img
-            src={user?.image}
-            alt=""
-            className="w-[30px] h-[30px] rounded-full"
-          />
-        </div>
-      </div>
-    </>
+          {iconList[4].icon}
+        </IconButton>
+      </Stack>
+      <Preference open={open} setOpen={setOpen} />
+    </div>
   );
 };
 

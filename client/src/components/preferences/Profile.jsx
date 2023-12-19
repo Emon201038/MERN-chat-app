@@ -1,8 +1,10 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   return (
     <Stack padding={2} spacing={2}>
       <Box>
@@ -26,6 +28,7 @@ const Profile = () => {
         color="primary"
         size="small"
         sx={{ marginTop: "20px" }}
+        onClick={() => navigate(`/profile/edit/${user._id}`)}
       >
         Edit Profile
       </Button>

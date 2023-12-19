@@ -2,7 +2,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
 import { selecteConversation } from "../features/conversations/conversationSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selecteFriend } from "../features/friends/friendSlice";
 import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -10,13 +10,7 @@ import { CheckCircle } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 // import { useNavigate } from "react-router-dom";
 /*eslint-disable react/prop-types */
-const SingleContact = ({
-  conversation,
-  currentUser,
-  selectedUserId,
-  setSelectedUserId,
-  setRequest,
-}) => {
+const SingleContact = ({ conversation, currentUser, setRequest }) => {
   const [friends, setFriends] = useState(null);
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -29,12 +23,12 @@ const SingleContact = ({
   }, [conversation, currentUser]);
 
   const handleClick = (id, friend) => {
-    setSelectedUserId(id);
     dispatch(selecteConversation(id));
     dispatch(selecteFriend(friend));
     setRequest(true);
+    console.log(friend._id);
   };
-  const isSelected = selectedUserId === conversation._id;
+  const { selectedFriend } = useSelector((state) => state.friend);
 
   const formatDate = (createdAt) => {
     const currentDate = moment();
@@ -100,7 +94,7 @@ const SingleContact = ({
   return (
     <div
       className={`single-contact ${
-        isSelected
+        selectedFriend?._id === friends?._id
           ? theme.palette.mode === "dark"
             ? "bg-[#3c3c3c]"
             : "bg-slate-200"

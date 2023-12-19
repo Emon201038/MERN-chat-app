@@ -171,7 +171,7 @@ const OnlinePeople = () => {
     );
   }
   return (
-    <div className="online-people px-5 py-2 w-full h-[80px] flex snap-x gap-5 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth mb-3">
+    <div className="online-people px-5 py-2 w-full h-[92px] flex items-center snap-x gap-5 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth mb-3">
       {content}
     </div>
   );
