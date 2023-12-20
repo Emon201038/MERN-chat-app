@@ -25,21 +25,25 @@ const Sidebar = () => {
     {
       id: 1,
       icon: <Chat />,
+      name: "Chat",
       link: "/inbox",
     },
     {
       id: 2,
       icon: <Storefront />,
+      name: "Market place",
       link: "/store",
     },
     {
       id: 3,
       icon: <MessageOutlined />,
+      name: "Message requests",
       link: "/message-requests",
     },
     {
       id: 4,
       icon: <ArchiveRounded />,
+      name: "Archived messages",
       link: "/archived-messages",
     },
     {
@@ -58,13 +62,14 @@ const Sidebar = () => {
           onClick={() => handleSelectIcon(5)}
         />
       ),
-      link: "/profile",
+      name: "Profile",
+      link: "/settings",
     },
   ];
 
-  const handleSelectIcon = (id, link) => {
-    dispatch(selecteNav(id));
-    navigate(link);
+  const handleSelectIcon = (icon) => {
+    dispatch(selecteNav({ id: icon.id, name: icon.name, link: icon.link }));
+    navigate(icon.link);
   };
 
   const handleSelectProfile = (id, link) => {
@@ -74,7 +79,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`side-bar max-sm:hidden h-full w-[80px] ${
+      className={`side-bar max-sm:hidden h-full w-[60px] ${
         theme.palette.mode === "dark" ? "bg-[#3c3c3c]" : "bg-slate-200"
       }`}
     >
@@ -92,9 +97,10 @@ const Sidebar = () => {
                 sx={{
                   width: "45px",
                   height: "45px",
-                  bgcolor: selectedNav === item.id ? "rgb(203 213 225)" : "",
+                  bgcolor:
+                    selectedNav?.id === item.id ? "rgb(203 213 225)" : "",
                 }}
-                onClick={() => handleSelectIcon(item.id, item.link)}
+                onClick={() => handleSelectIcon(item)}
               >
                 {item.icon}
               </IconButton>

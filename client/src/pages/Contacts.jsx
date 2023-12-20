@@ -16,7 +16,7 @@ import {
 import { socket } from "../socket";
 import { useSelector } from "react-redux";
 import MobileConversation from "../components/conversation/MobileConversation";
-import Layout from "../components/contact/ContactLayout";
+import ContactLayout from "../components/contact/ContactLayout";
 
 /*eslint-disable react/prop-types */
 const Contacts = ({ request, setRequest }) => {
@@ -84,8 +84,8 @@ const Contacts = ({ request, setRequest }) => {
   return (
     <>
       <Hidden smDown={selectedConversation !== null}>
-        <div className="contacts h-[100vh] w-[320px] max-sm:w-full max-sm:px-2 flex flex-col items-center border-r-2">
-          <Layout>
+        <div className="contacts h-[100vh] w-[320px] lg:w-[320px] md:w-[250px] sm:w-[230px] max-sm:w-full max-sm:px-2 flex flex-col items-center border-r-2">
+          <ContactLayout>
             <div className="container-contact w-full flex-1 overflow-y-auto">
               <div className="search-input p-2 w-full h-[56px] my-2">
                 <FormControl sx={{ width: "100%" }}>
@@ -108,7 +108,7 @@ const Contacts = ({ request, setRequest }) => {
                 {content}
               </div>
             </div>
-          </Layout>
+          </ContactLayout>
         </div>
       </Hidden>
       <Hidden smUp>{selectedConversation && <MobileConversation />}</Hidden>

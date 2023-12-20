@@ -15,7 +15,6 @@ const Footer = () => {
     { icon: <AddCircle />, hidden: "smUp", id: 2 },
     { icon: <Image />, hidden: "smUp", id: 3 },
     { icon: <Mic />, hidden: "smUp", id: 4 },
-    // Add more objects as needed
   ];
   return (
     <div

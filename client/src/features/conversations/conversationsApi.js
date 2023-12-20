@@ -54,6 +54,12 @@ export const conversationSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    getSingleConversation: builder.query({
+      query: (id) => ({
+        url: `api/conversation/${id}/`,
+        method: "GET",
+      }),
+    }),
     getMessages: builder.query({
       query: (data) => ({
         url: `/api/conversation/message/${data}?limit=8&page=1`,
@@ -117,12 +123,18 @@ export const conversationSlice = apiSlice.injectEndpoints({
         const cnv = dispatch(
           apiSlice.util.updateQueryData(
             "getConversations",
-            undefined,
+            arg.sender,
             (draft) => {
               const draftConversation = draft?.payload?.conversation?.find(
                 (c) => c._id == arg.conversationId
               );
-              draftConversation.lastMessage = arg;
+              draftConversation.lastMessage = {
+                conversationId: arg.conversationId,
+                receiverId: arg.receiverId,
+                senderId: arg.sender,
+                text: arg.text,
+                createdAt: arg.createdAt,
+              };
             }
           )
         );
@@ -157,6 +169,7 @@ export const conversationSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetConversationsQuery,
+  useGetSingleConversationQuery,
   useGetMessagesQuery,
   useSentMessageMutation,
 } = conversationSlice;

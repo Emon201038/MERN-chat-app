@@ -71,13 +71,16 @@ const Conversation = ({ request, arrivalMessage }) => {
   let content = null;
   if (!selectedConversation) {
     content = (
-      <div className="w-full  h-full max-sm:hidden flex justify-center items-center text-2xl font-bold text-gray-400">
+      <div className="w-[calc(100vw-380px)] lg:w-[calc(100vw-380px)] md:w-[calc(100vw-290px)] sm:w-[calc(100vw-270px)] h-full max-sm:hidden flex justify-center items-center text-2xl font-bold text-gray-400">
         &larr; Select a contact to open a conversation
       </div>
     );
   } else {
     content = (
-      <div className="conversations flex-grow max-sm:hidden  bg-white">
+      <div
+        // style={{ width: "calc(100vw - 380px)" }}
+        className="conversations  max-sm:hidden w-[calc(100vw-380px)] lg:w-[calc(100vw-380px)] md:w-[calc(100vw-290px)] sm:w-[calc(100vw-270px)] bg-white"
+      >
         <div className="wrapper w-full h-full flex flex-col">
           <Head selectedFriend={selectedFriend} />
           <Messages skip={request} />

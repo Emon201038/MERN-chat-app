@@ -1,7 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  selectedIcon: 1,
+  selectedIcon: {
+    id: 1,
+    name: "Chat",
+    link: "/inbox",
+  },
   selectedFooter: {
     id: 1,
     name: "Chat",

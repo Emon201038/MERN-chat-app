@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useGetFriendByIdQuery,
   useGetUserByIdQuery,
@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { Alert, Avatar, Badge, Box, Skeleton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { socket } from "../socket";
+import { useGetSingleConversationQuery } from "../features/conversations/conversationsApi";
+import { selecteConversation } from "../features/conversations/conversationSlice";
+import { selecteFriend } from "../features/friends/friendSlice";
 
 /* eslint-disable react/prop-types */
 const OnlinePeople = () => {
@@ -17,8 +20,13 @@ const OnlinePeople = () => {
     isError,
     error,
   } = useGetUserByIdQuery(thisUser?._id);
+
   const [friendsArray, setFriendsId] = useState([]);
   const [onlineUser, setOnlineUser] = useState([]);
+  const [skipSearche, setSkipSearche] = useState(true);
+  const [userId, setUserId] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(
     () => {
@@ -53,6 +61,27 @@ const OnlinePeople = () => {
       skip: !skip(friendsArray),
     }
   );
+
+  const { data } = useGetSingleConversationQuery(userId, {
+    skip: skipSearche,
+  });
+
+  if (data) {
+    console.log(data);
+    dispatch(selecteConversation(data?.payload?.conversation?._id));
+  }
+
+  const handleClick = (user) => {
+    setUserId(user._id);
+    setSkipSearche(false);
+    dispatch(
+      selecteFriend({
+        ...user,
+        name: user?.firstName + " " + user?.lastName,
+      })
+    );
+    console.log(user);
+  };
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
@@ -146,6 +175,7 @@ const OnlinePeople = () => {
             key={user?._id}
             title={user?.firstName + " " + user?.lastName}
             className="text-center"
+            onClick={() => handleClick(user)}
           >
             <StyledBadge
               overlap="circular"
@@ -161,7 +191,7 @@ const OnlinePeople = () => {
             <Typography
               variant="inherit"
               align="center"
-              sx={{ fontSize: "12px" }}
+              sx={{ fontSize: "10px" }}
             >
               {truncateName(user?.firstName, user?.lastName, 12)}
             </Typography>
@@ -171,7 +201,7 @@ const OnlinePeople = () => {
     );
   }
   return (
-    <div className="online-people px-5 py-2 w-full h-[92px] flex items-center snap-x gap-5 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth mb-3">
+    <div className="online-people px-2 py-2 w-full h-[92px] flex items-center snap-x gap-3 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth ">
       {content}
     </div>
   );

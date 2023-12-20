@@ -28,7 +28,7 @@ const ContactLayout = ({ children }) => {
   };
   return (
     <>
-      <div className="head flex justify-between w-full h-[60px]  max-sm:pl-0 px-3  mt-[20px] max-sm:mt-0 font-bold text-lg">
+      <div className="head flex justify-between w-[320px] lg:w-[320px] md:w-[250px] sm:w-[230px] max-sm:w-full h-[60px]  max-sm:pl-0 px-3  mt-[20px] max-sm:mt-0 font-bold text-lg">
         <SideBarItems
           toggleDrawer={toggleDrawer}
           drawerOpen={drawerOpen}

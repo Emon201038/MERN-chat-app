@@ -19,47 +19,54 @@ import {
   ListItemText,
   Stack,
 } from "@mui/material";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { selecteNav } from "../features/side nav/sideNavSllice";
 
 /*eslint-disable react/prop-types*/
 const SideBarItems = ({ toggleDrawer, drawerOpen, setDrawerOpen }) => {
-  const [selectedItem, setSelectedItem] = useState(1);
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { user } = useSelector((state) => state.auth);
+  const { selectedIcon } = useSelector((state) => state.sideNav);
+
   const { selectedFooter } = useSelector((state) => state.sideNav);
 
   const drawerContent = [
     {
+      id: 5,
       name: "profile",
     },
     {
+      id: 1,
       name: "Chats",
       icon: <Mail />,
       link: "/inbox",
     },
     {
+      id: 2,
       name: "Market place",
       icon: <Storefront />,
       link: "/store",
     },
     {
+      id: 3,
       name: "Message Requests",
       icon: <SmsOutlined />,
       link: "/message-requests",
     },
     {
+      id: 4,
       name: "Archived",
       icon: <Archive />,
       link: "/archived-messages",
     },
   ];
 
-  const handleClick = (index) => {
-    setSelectedItem((prev) => (index !== 0 ? index : prev));
-    if (index !== 0) {
+  const handleClick = (item) => {
+    dispatch(selecteNav({ id: item.id, name: item.name, link: item.link }));
+    if (item.id !== 5) {
       setDrawerOpen(false);
     }
   };
@@ -72,12 +79,12 @@ const SideBarItems = ({ toggleDrawer, drawerOpen, setDrawerOpen }) => {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {drawerContent.map((item, index) => (
+        {drawerContent.map((item) => (
           <ListItem
-            key={item.name}
+            key={item.id}
             disablePadding
-            sx={{ bgcolor: selectedItem === index && "lightgray" }}
-            onClick={() => handleClick(index)}
+            sx={{ bgcolor: selectedIcon?.id === item.id && "lightgray" }}
+            onClick={() => handleClick(item)}
           >
             <ListItemButton
               onClick={() => item.name !== "profile" && navigate(item.link)}
@@ -102,7 +109,7 @@ const SideBarItems = ({ toggleDrawer, drawerOpen, setDrawerOpen }) => {
                       primary={user.firstName + " " + user.lastName}
                     />
                   </Stack>
-                  <IconButton onClick={() => navigate("/profile")}>
+                  <IconButton onClick={() => navigate("/settings")}>
                     <Settings />
                   </IconButton>
                 </Stack>

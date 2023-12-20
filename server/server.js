@@ -86,8 +86,6 @@ io.on("connection", async (socket) => {
     "sendMessage",
     ({ senderId, receiverId, text, conversationId, createdAt }) => {
       const user = getUser(receiverId);
-      console.log(user?.socketId);
-      console.log(text);
       io.to(user?.socketId).emit("getMessage", {
         senderId,
         receiverId,

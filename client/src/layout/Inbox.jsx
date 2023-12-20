@@ -1,18 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useLogoutMutation } from "../features/auth/authApi";
 import { useNavigate } from "react-router-dom";
-import FriendsModal from "../Modals/FriendsModal";
-import Sidebar from "../pages/Sidebar";
 import Contacts from "../pages/Contacts";
 import Conversation from "../pages/Conversation";
-import ProfileModal from "../Modals/ProfileModal";
 import { connectSocket } from "../socket";
 import { useSelector } from "react-redux";
-import { Hidden } from "@mui/material";
 import Layout from "../components/Layout";
 
 function Inbox() {
-  const [isFriendModalOpen, setIsFriendModalOpen] = useState(false);
   const [request, setRequest] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
@@ -58,7 +53,6 @@ function Inbox() {
   return (
     <Layout>
       <Contacts
-        setIsFriendModalOpen={setIsFriendModalOpen}
         request={request}
         setRequest={setRequest}
         arrivalMessage={arrivalMessage}

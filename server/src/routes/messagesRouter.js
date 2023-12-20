@@ -4,6 +4,7 @@ const {
   handleGetConversations,
   handleCreateMessage,
   handleGetMessages,
+  handleGetSingleConversation,
 } = require("../controllers/messagesController");
 const { isLoggedIn } = require("../middlewares/auth");
 const { validateTextMessage } = require("../validators/auth");
@@ -19,7 +20,11 @@ messagesRouter.post(
   runvalidation,
   handleCreateMessage
 );
+// GET --> localhost:3001/api/conversation
+messagesRouter.get("/:friendId", isLoggedIn, handleGetSingleConversation);
+
 messagesRouter.get("/", isLoggedIn, handleGetConversations);
+
 messagesRouter.get("/message/:conversationId", isLoggedIn, handleGetMessages);
 
 module.exports = messagesRouter;

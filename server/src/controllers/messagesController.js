@@ -41,6 +41,27 @@ const handleGetConversations = async (req, res, next) => {
   }
 };
 
+const handleGetSingleConversation = async (req, res, next) => {
+  try {
+    const { friendId } = req.params;
+
+    const conversation = await Conversations.findOne({
+      participients: { $in: [req.user._id, friendId] },
+    });
+
+    if (!conversation) {
+      throw createError(404, "No conversation found with this friend");
+    }
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Conversation found successfully",
+      payload: { conversation },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const handleCreateMessage = async (req, res, next) => {
   try {
     const { conversationId } = req.params;
@@ -103,6 +124,7 @@ const handleGetMessages = async (req, res, next) => {
 module.exports = {
   handleCreateConversation,
   handleGetConversations,
+  handleGetSingleConversation,
   handleCreateMessage,
   handleGetMessages,
 };
