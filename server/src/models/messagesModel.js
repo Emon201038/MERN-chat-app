@@ -15,6 +15,14 @@ const messageSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    messageType: {
+      type: String,
+      enum: ["text", "image", "video", "voice", "file"],
+    },
+    messageStatus: {
+      type: String,
+      enum: ["sending", "sent", "delevered", "seen"],
+    },
     text: {
       type: String,
     },
