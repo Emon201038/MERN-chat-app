@@ -14,6 +14,7 @@ import { useTheme } from "@mui/material/styles";
 import Lottie from "lottie-react";
 import animationData from "../../animation/animation.json";
 import { useSentMessageMutation } from "../../features/conversations/conversationsApi";
+import Emoji from "../conversation/Emoji";
 
 /* eslint-disable react/prop-types */
 const ConversationForm = () => {
@@ -32,6 +33,7 @@ const ConversationForm = () => {
 
   const handleSentMessage = async (e) => {
     e.preventDefault();
+    setOpenEmoji(false);
 
     socket?.emit("stopTyping", {
       senderId: user?._id,
@@ -107,16 +109,37 @@ const ConversationForm = () => {
       }
     }, timerLength);
   };
+  const [openEmoji, setOpenEmoji] = useState(false);
+
+  const handleOpenEmoji = () => {
+    setOpenEmoji(!openEmoji);
+  };
+
+  const handleAddEmoji = (e) => {
+    const sym = e.unified.split("_");
+
+    const emojiArray = [];
+    sym.forEach((el) => emojiArray.push("0x" + el));
+
+    let emoji = String.fromCodePoint(...emojiArray);
+    setInputValue(inputValue + emoji);
+  };
+
   return (
-    <form onSubmit={handleSentMessage} className="w-full h-[35px]">
+    <form onSubmit={handleSentMessage} className="relative w-full h-[35px]">
       {isTyping && (
-        <div className="w-[60px] h-[20px] absolute top-[-40px] left-9 bg-white">
+        <div className="w-[70px] text-center h-[40px] absolute top-[-40px] left-[-150px] flex justify-center items-center">
           <Lottie
             animationData={animationData}
             loop
             autoplay
-            marginHeight={0}
-            marginWidth={0}
+            color="blue"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+            width={30}
+            height={30}
           />
         </div>
       )}
@@ -158,17 +181,25 @@ const ConversationForm = () => {
                 palette.mode === "dark" ? "#3c3c3c " : "rgb(226,232,240)",
             },
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  sx={{
-                    width: "25px",
-                    height: "25px",
-                    color: "#1974d2",
-                  }}
-                >
-                  <EmojiEmotions />
-                </IconButton>
-              </InputAdornment>
+              <>
+                <InputAdornment position="end">
+                  <IconButton
+                    sx={{
+                      width: "25px",
+                      height: "25px",
+                      color: "#1974d2",
+                    }}
+                    onClick={handleOpenEmoji}
+                  >
+                    <EmojiEmotions />
+                  </IconButton>
+                </InputAdornment>
+                <Emoji
+                  openEmoji={openEmoji}
+                  setOpenEmoji={setOpenEmoji}
+                  handleAddEmoji={handleAddEmoji}
+                />
+              </>
             ),
           }}
         />
