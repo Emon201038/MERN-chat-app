@@ -3,6 +3,7 @@ const createError = require("http-errors");
 const Conversations = require("../models/conversationModel");
 const { successResponse } = require("../controllers/responseController");
 const OneToOneMessage = require("../models/messagesModel");
+const { io } = require("../../server");
 
 const handleCreateConversation = async (req, res, next) => {
   try {
@@ -65,14 +66,17 @@ const handleGetSingleConversation = async (req, res, next) => {
 const handleCreateMessage = async (req, res, next) => {
   try {
     const { conversationId } = req.params;
-    const { receiverId, text } = req.body;
-    console.log(receiverId, text);
+    const { receiverId, text, messageStatus, sentTime } = req.body;
+    // io.on("sendMessage", (data) => console.log(data));
 
+    console.log(io);
     const message = await OneToOneMessage.create({
       conversationId,
       sender: req.user._id,
       receiver: receiverId,
       text,
+      messageStatus,
+      sentTime,
     });
 
     return successResponse(res, {

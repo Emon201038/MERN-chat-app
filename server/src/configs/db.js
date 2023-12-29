@@ -3,7 +3,7 @@ const { dbUrl } = require("../../secret.js");
 
 const db = async () => {
   try {
-    mongoose.set("debug", true);
+    // mongoose.set("debug", true);
     mongoose
       .connect(dbUrl)
       .then(() => console.log(`MongoDB connection established successfully`));

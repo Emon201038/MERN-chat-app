@@ -1,4 +1,9 @@
-import { EmojiEmotions, MoreVert } from "@mui/icons-material";
+import {
+  CheckCircleOutline,
+  CircleOutlined,
+  EmojiEmotions,
+  MoreVert,
+} from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
@@ -27,7 +32,7 @@ const Message = ({ msg }) => {
       }`}
     >
       <div
-        className={`w-auto h-auto flex gap-2 justify-center items-center relative `}
+        className={`w-auto h-auto flex gap-2 justify-center items-center relative`}
         onMouseOver={() => setIconShow(true)}
         onMouseOut={() => setIconShow(false)}
       >
@@ -59,16 +64,37 @@ const Message = ({ msg }) => {
             </div>
           </div>
         )}
-
         <div
-          className={`w-auto px-3 cursor-default py-1 text-sm rounded-lg mb-5 min-w-[50px] max-w-[300px] text-center ${
-            msg?.sender === user._id
-              ? "bg-purple-500 text-white mr-5"
-              : "bg-slate-300 text-black"
-          }`}
+          className={`flex flex-col ${
+            msg?.receiver === user._id ? "items-start" : "items-end"
+          } `}
         >
-          {msg?.text}
+          <div
+            className={`w-auto px-3 cursor-default py-1 text-sm rounded-lg min-w-[50px] max-w-[300px] text-center ${
+              msg?.sender === user._id
+                ? "bg-purple-500 text-white"
+                : "bg-slate-300 text-black"
+            }`}
+          >
+            {msg?.text}
+          </div>
+          <span
+            className={`text-xs text-gray-600 min-w-[90px] ${
+              msg?.sender === user._id ? "text-right" : "text-left"
+            }`}
+          >
+            {format(msg?.createdAt)}
+          </span>
         </div>
+        {msg?.sender === user._id && (
+          <div>
+            {msg?.messageStatus === "sending" ? (
+              <CircleOutlined fontSize="8px" />
+            ) : (
+              <CheckCircleOutline fontSize="8px" />
+            )}
+          </div>
+        )}
         {msg?.receiver === user._id && iconShow && (
           <div className="w-5 h-5 mb-5 rounded-full hover:bg-gray-400 flex justify-center items-center">
             <div className="w-3 h-3">
@@ -76,13 +102,6 @@ const Message = ({ msg }) => {
             </div>
           </div>
         )}
-        <span
-          className={`absolute bottom-[5px]  ${
-            msg?.receiver === user._id ? "left-2" : "right-6"
-          } text-xs text-gray-600 min-w-[90px]`}
-        >
-          {format(msg?.createdAt)}
-        </span>
       </div>
     </li>
   );

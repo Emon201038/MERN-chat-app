@@ -23,6 +23,9 @@ const messageSchema = Schema(
       type: String,
       enum: ["sending", "sent", "delevered", "seen"],
     },
+    sentTime: {
+      type: String,
+    },
     text: {
       type: String,
     },

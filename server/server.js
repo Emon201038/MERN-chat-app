@@ -24,10 +24,15 @@ server.listen(port, async (req) => {
   await db();
 });
 let users = [];
+let onlineUsers = [];
 let connectedUserOffline = [];
 const addUser = (userId, socketId) => {
   !users.some((usr) => usr.userId === userId) &&
     users.push({ userId, socketId });
+};
+const addOnlineUser = async (userId, socketId) => {
+  !users.some((usr) => usr?.userId === userId) &&
+    onlineUsers.push({ user: await User.findById(userId), socketId });
 };
 
 const removeUser = (socketId) => {
@@ -69,6 +74,15 @@ io.on("connection", async (socket) => {
       socket_id: socket_id,
       status: "online",
     });
+
+    // onlineUsers.some((u) => u.user._id !== user_id) &&
+    //   onlineUsers.push({
+    //     user: await User.findById(user_id),
+    //     socketId: socket_id,
+    //   });
+    await addOnlineUser(user_id, socket_id);
+    io.emit("test_online_users", onlineUsers);
+
     addUser(user_id, socket_id);
     console.log(users, "testing");
     io.emit("getUsers", users);
@@ -84,12 +98,25 @@ io.on("connection", async (socket) => {
   // socket event listeners here
   socket.on(
     "sendMessage",
-    ({ senderId, receiverId, text, conversationId, createdAt }) => {
+    async ({
+      senderId,
+      receiverId,
+      text,
+      conversationId,
+      messageStatus,
+      createdAt,
+    }) => {
       const user = getUser(receiverId);
+      const userProfile = await User.findById(user?.userId);
+      let status = messageStatus;
+      if (userProfile?.status === "Online") {
+        status = "delevered";
+      }
       io.to(user?.socketId).emit("getMessage", {
         senderId,
         receiverId,
         text,
+        status,
         conversationId,
         createdAt,
       });
@@ -112,6 +139,11 @@ io.on("connection", async (socket) => {
       socket_id: "",
       status: "offline",
     });
+
+    onlineUsers = onlineUsers.filter((usr) => usr.socketId !== socket.id);
+
+    io.emit("test_online_users", onlineUsers);
+
     // socket.disconnect(0);
     addOfflineUser(socket.id);
     removeUser(socket.id);
@@ -120,3 +152,5 @@ io.on("connection", async (socket) => {
     console.log(users);
   });
 });
+
+module.exports = { io };

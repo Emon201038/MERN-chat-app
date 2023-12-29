@@ -75,6 +75,7 @@ export const conversationSlice = apiSlice.injectEndpoints({
                 sender: data.senderId,
                 receiver: data.receiverId,
                 text: data.text,
+                messageStatus: data.messageStatus,
                 createdAt: data.createdAt,
                 _id: data.createdAt,
               });
@@ -151,14 +152,29 @@ export const conversationSlice = apiSlice.injectEndpoints({
                 createdAt: arg?.createdAt,
                 text: arg?.text,
                 _id: arg?.createdAt,
+                messageStatus: "sending",
               });
             }
           )
         );
 
         try {
-          await queryFulfilled;
+          const { data } = await queryFulfilled;
+          dispatch(
+            apiSlice.util.updateQueryData(
+              "getMessages",
+              arg.conversationId,
+              (draft) => {
+                const draftMessage = draft.payload.messages;
+                const matchedMessage = draftMessage.find(
+                  (m) => m._id == data.payload.message.sentTime
+                );
+                matchedMessage.messageStatus = "sent";
+              }
+            )
+          );
         } catch (error) {
+          console.log(error);
           cnv.undo();
           msg.undo();
         }

@@ -44,6 +44,7 @@ const ConversationForm = () => {
       senderId: user?._id,
       receiverId: selectedFriend?._id,
       text: inputValue,
+      messageStatus: "sending",
       conversationId: selectedConversation,
       createdAt: Date.now(),
     });
@@ -55,6 +56,8 @@ const ConversationForm = () => {
         receiverId: selectedFriend._id,
         sender: user?._id,
         text: inputValue,
+        messageStatus: "sent",
+        sentTime: Date.now(),
         createdAt: Date.now(),
       });
 

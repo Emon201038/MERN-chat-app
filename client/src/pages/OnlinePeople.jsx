@@ -1,10 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useGetFriendByIdQuery,
-  useGetUserByIdQuery,
-} from "../features/friends/friendsApi";
 import { useEffect, useState } from "react";
-import { Alert, Avatar, Badge, Box, Skeleton, Typography } from "@mui/material";
+import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { socket } from "../socket";
 import { useGetSingleConversationQuery } from "../features/conversations/conversationsApi";
@@ -14,15 +10,8 @@ import { selecteFriend } from "../features/friends/friendSlice";
 /* eslint-disable react/prop-types */
 const OnlinePeople = () => {
   const { user: thisUser } = useSelector((state) => state.auth);
-  const {
-    data: loggedInUser,
-    isLoading,
-    isError,
-    error,
-  } = useGetUserByIdQuery(thisUser?._id);
 
-  const [friendsArray, setFriendsId] = useState([]);
-  const [onlineUser, setOnlineUser] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [skipSearche, setSkipSearche] = useState(true);
   const [userId, setUserId] = useState(null);
 
@@ -31,36 +20,15 @@ const OnlinePeople = () => {
   useEffect(
     () => {
       if (socket) {
-        socket.on("getUsers", (user) => {
-          setOnlineUser(user);
+        socket?.on("test_online_users", (user) => {
+          const newUsers = user?.filter((u) => u?.user?._id !== thisUser?._id);
+          setOnlineUsers(newUsers);
         });
       }
     }, //eslint-disable-next-line react-hooks/exhaustive-deps
-    [loggedInUser, socket]
+    [socket]
   );
-  useEffect(() => {
-    const friendArray = loggedInUser?.payload?.user?.friends.filter((f) =>
-      onlineUser.some((u) => u.userId === f)
-    );
-    setFriendsId(friendArray);
-  }, [onlineUser, loggedInUser]);
-
-  const skip = () => {
-    if (friendsArray !== undefined) {
-      if (friendsArray.length > 0) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  };
-
-  const { data: onlineFriends } = useGetFriendByIdQuery(
-    friendsArray?.join(","),
-    {
-      skip: !skip(friendsArray),
-    }
-  );
+  console.log(onlineUsers);
 
   const { data } = useGetSingleConversationQuery(userId, {
     skip: skipSearche,
@@ -80,7 +48,7 @@ const OnlinePeople = () => {
         name: user?.firstName + " " + user?.lastName,
       })
     );
-    console.log(user);
+    // console.log(user);
   };
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -122,58 +90,18 @@ const OnlinePeople = () => {
   };
 
   //decide what to render
-  let content = <h4>No Friends online</h4>;
-  if (isLoading) {
-    content = (
+
+  let users = null;
+  if (onlineUsers.length === 0) {
+    users = <div>No online people </div>;
+  }
+  if (onlineUsers.length > 0) {
+    users = (
       <>
-        <Box sx={{ textAlign: "center" }}>
-          <Skeleton
-            animation="pulse"
-            variant="circular"
-            width={50}
-            height={50}
-          />
-          <Skeleton animation="pulse" width={50} height={10} />
-        </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <Skeleton
-            animation="pulse"
-            variant="circular"
-            width={50}
-            height={50}
-          />
-          <Skeleton animation="pulse" width={50} height={10} />
-        </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <Skeleton
-            animation="pulse"
-            variant="circular"
-            width={50}
-            height={50}
-          />
-          <Skeleton animation="pulse" width={50} height={15} />
-        </Box>
-      </>
-    );
-  }
-  if (!isLoading && isError) {
-    console.log(error);
-    content = <Alert severity="error">{error}</Alert>;
-  }
-  if (!isLoading && !isError && onlineFriends?.payload?.user?.length === 0) {
-    content = (
-      <Alert severity="info" sx={{ fontSize: "12px", textAlign: "center" }}>
-        No online friends
-      </Alert>
-    );
-  }
-  if (!isLoading && !isError && onlineFriends?.payload?.user?.length > 0) {
-    content = (
-      <>
-        {onlineFriends?.payload?.user?.map((user) => (
+        {onlineUsers?.map((user) => (
           <div
-            key={user?._id}
-            title={user?.firstName + " " + user?.lastName}
+            key={user?.user?._id}
+            title={user?.user?.firstName + " " + user?.user?.lastName}
             className="text-center"
             onClick={() => handleClick(user)}
           >
@@ -183,8 +111,8 @@ const OnlinePeople = () => {
               variant="dot"
             >
               <Avatar
-                alt={user?.firstName}
-                src={user?.image}
+                alt={user?.user?.firstName}
+                src={user?.user?.image}
                 sx={{ width: "50px", height: "50px" }}
               />
             </StyledBadge>
@@ -193,7 +121,7 @@ const OnlinePeople = () => {
               align="center"
               sx={{ fontSize: "10px" }}
             >
-              {truncateName(user?.firstName, user?.lastName, 12)}
+              {truncateName(user?.user?.firstName, user?.user?.lastName, 12)}
             </Typography>
           </div>
         ))}
@@ -202,7 +130,7 @@ const OnlinePeople = () => {
   }
   return (
     <div className="online-people px-2 py-2 w-full h-[92px] flex items-center snap-x gap-3 mx-auto overflow-x-auto overflow-y-hidden scroll-smooth ">
-      {content}
+      {users}
     </div>
   );
 };

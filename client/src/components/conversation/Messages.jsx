@@ -94,7 +94,7 @@ const Messages = () => {
           height={window.innerHeight - 120}
         >
           <SimpleBarStyle timeout={500} autoHide={500}>
-            <ul className="flex flex-col  h-full justify-end">
+            <ul className="flex flex-col  h-full justify-end p-3">
               {data?.payload?.messages?.map((msg) => {
                 return <Message key={msg?.createdAt} msg={msg} />;
               })}

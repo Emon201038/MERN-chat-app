@@ -28,6 +28,7 @@ import { useTheme } from "@mui/material/styles";
 /*eslint-disable react/prop-types */
 const Head = () => {
   const [isBoxVissible, setIsBoxVissible] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const { selectedFriend } = useSelector((state) => state.friend);
 
   const dispatch = useDispatch();
@@ -36,6 +37,11 @@ const Head = () => {
   const handleUnselectConversation = () => {
     dispatch(unSelectedConversation());
     dispatch(unSelecteFriend());
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(searchValue);
   };
 
   return (
@@ -61,24 +67,29 @@ const Head = () => {
             width="100%"
             height="100%"
           >
-            <FormControl
-              sx={{
-                width: "80%",
-              }}
-            >
-              <OutlinedInput
-                size="small"
-                id="input-with-icon-adornment"
-                placeholder="Search in conversation"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <Search color="primary" />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+            <form onSubmit={handleSubmit}>
+              <FormControl
+                sx={{
+                  width: "80%",
+                }}
+              >
+                <OutlinedInput
+                  size="small"
+                  id="input-with-icon-adornment"
+                  placeholder="Search in conversation"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton type="submit">
+                        <Search color="primary" />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </form>
+
             <Box>
               <Stack
                 direction="row"
