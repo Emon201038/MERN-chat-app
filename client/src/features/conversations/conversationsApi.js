@@ -165,11 +165,32 @@ export const conversationSlice = apiSlice.injectEndpoints({
               "getMessages",
               arg.conversationId,
               (draft) => {
+                const { sender, receiver, text, conversationId, _id } =
+                  data.payload.message || {};
+                socket?.emit("sendMessage", {
+                  _id,
+                  senderId: sender,
+                  receiverId: receiver,
+                  text,
+                  messageStatus: "sending",
+                  conversationId,
+                  createdAt: Date.now(),
+                });
+
                 const draftMessage = draft.payload.messages;
                 const matchedMessage = draftMessage.find(
                   (m) => m._id == data.payload.message.sentTime
                 );
                 matchedMessage.messageStatus = "sent";
+                socket?.on("mark_as_delevered", (sentData) => {
+                  console.log(sentData.sentTime);
+
+                  const emittedMessage = draftMessage.find(
+                    (m) => sentData.sentTime == m._id
+                  );
+                  console.log(JSON.stringify(emittedMessage));
+                  // emittedMessage.messageStatus = "delevered";
+                });
               }
             )
           );

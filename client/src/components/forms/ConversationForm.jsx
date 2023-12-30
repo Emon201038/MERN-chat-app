@@ -40,14 +40,14 @@ const ConversationForm = () => {
       receiverId: selectedFriend?._id,
     });
 
-    socket?.emit("sendMessage", {
-      senderId: user?._id,
-      receiverId: selectedFriend?._id,
-      text: inputValue,
-      messageStatus: "sending",
-      conversationId: selectedConversation,
-      createdAt: Date.now(),
-    });
+    // socket?.emit("sendMessage", {
+    //   senderId: user?._id,
+    //   receiverId: selectedFriend?._id,
+    //   text: inputValue,
+    //   messageStatus: "sending",
+    //   conversationId: selectedConversation,
+    //   createdAt: Date.now(),
+    // });
 
     setInputValue("");
     try {

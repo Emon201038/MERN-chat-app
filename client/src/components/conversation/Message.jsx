@@ -1,4 +1,5 @@
 import {
+  CheckCircle,
   CheckCircleOutline,
   CircleOutlined,
   EmojiEmotions,
@@ -90,8 +91,10 @@ const Message = ({ msg }) => {
           <div>
             {msg?.messageStatus === "sending" ? (
               <CircleOutlined fontSize="8px" />
-            ) : (
+            ) : msg?.messageStatus === "sent" ? (
               <CheckCircleOutline fontSize="8px" />
+            ) : (
+              <CheckCircle fontSize="8px" />
             )}
           </div>
         )}
