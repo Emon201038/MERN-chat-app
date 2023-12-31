@@ -90,7 +90,10 @@ const socketServer = (io) => {
           messageStatus,
           conversationId,
           createdAt,
+          _id,
         });
+
+        io.to(user?.socketId).emit("seenMessage", { _id, conversationId });
 
         const receiverProfile = await User.findById(receiverId);
         console.log(receiverProfile);

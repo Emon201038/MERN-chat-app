@@ -9,6 +9,7 @@ import { Alert, CircularProgress, Stack } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import { socket } from "../../socket";
 
 /*eslint-disable react/prop-types */
 const Messages = () => {
@@ -47,6 +48,25 @@ const Messages = () => {
       );
     }
   }, [page, dispatch, selectedConversation]);
+
+  useEffect(() => {
+    socket?.on("seen", (checkData) => {
+      if (selectedConversation === checkData.conversationId) {
+        dispatch(
+          conversationSlice.util.updateQueryData(
+            "getMessages",
+            selectedConversation,
+            (draft) => {
+              const updateMessage = draft?.payload?.messages?.find((msg) => {
+                msg._id === checkData._id;
+              });
+              console.log(JSON.stringify(updateMessage));
+            }
+          )
+        );
+      }
+    });
+  }, [dispatch, selectedConversation]);
 
   //decide what to render
   let content = null;

@@ -22,7 +22,7 @@ const Message = ({ msg }) => {
 
   return (
     <li
-      key={msg?.createdAt}
+      key={msg?._id}
       ref={scrollRef}
       className={`m-2 flex  ${
         msg?.sender === user._id

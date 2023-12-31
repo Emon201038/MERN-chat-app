@@ -49,6 +49,7 @@ const Head = () => {
       width="100%"
       height={60}
       padding={1}
+      className="root1"
       direction="row"
       gap={3}
       justifyContent="center"
@@ -124,7 +125,7 @@ const Head = () => {
             direction="row"
             justifyContent="center"
             alignItems="center"
-            spacing={3}
+            spacing={2}
             className="user-info"
           >
             <Hidden smUp>
@@ -152,7 +153,7 @@ const Head = () => {
               </p>
             </Box>
           </Stack>
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={2}>
             <IconButton title="audio call">
               <Call color="secondary" />
             </IconButton>

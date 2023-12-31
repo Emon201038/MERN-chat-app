@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { socket } from "../../socket";
 import { apiSlice } from "../api/apiSlice";
 
@@ -66,7 +67,9 @@ export const conversationSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       async onCacheEntryAdded(arg, { cacheDataLoaded, updateCachedData }) {
-        await cacheDataLoaded;
+        const data = await cacheDataLoaded;
+        // console.log(JSON.stringify(data));
+
         if (socket) {
           socket?.on("getMessage", (data) => {
             updateCachedData((draft) => {
@@ -77,8 +80,25 @@ export const conversationSlice = apiSlice.injectEndpoints({
                 text: data.text,
                 messageStatus: data.messageStatus,
                 createdAt: data.createdAt,
-                _id: data.createdAt,
+                _id: data._id,
               });
+            });
+          });
+          socket?.on("mark_as_delevered", async (sentData) => {
+            updateCachedData((draft) => {
+              const targetedMessage = draft?.payload?.messages?.find(
+                (msg) => msg._id == sentData.sentTime
+              );
+              targetedMessage.messageStatus = "delevered";
+            });
+          });
+          socket?.on("seenMessage", (data) => {
+            updateCachedData((draft) => {
+              const message = draft?.payload?.messages?.find(
+                (msg) => msg._id == data._id
+              );
+              console.log(JSON.stringify(message));
+              console.log(selected);
             });
           });
         }
@@ -182,15 +202,6 @@ export const conversationSlice = apiSlice.injectEndpoints({
                   (m) => m._id == data.payload.message.sentTime
                 );
                 matchedMessage.messageStatus = "sent";
-                socket?.on("mark_as_delevered", (sentData) => {
-                  console.log(sentData.sentTime);
-
-                  const emittedMessage = draftMessage.find(
-                    (m) => sentData.sentTime == m._id
-                  );
-                  console.log(JSON.stringify(emittedMessage));
-                  // emittedMessage.messageStatus = "delevered";
-                });
               }
             )
           );

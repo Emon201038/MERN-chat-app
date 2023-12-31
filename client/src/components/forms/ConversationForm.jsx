@@ -40,15 +40,6 @@ const ConversationForm = () => {
       receiverId: selectedFriend?._id,
     });
 
-    // socket?.emit("sendMessage", {
-    //   senderId: user?._id,
-    //   receiverId: selectedFriend?._id,
-    //   text: inputValue,
-    //   messageStatus: "sending",
-    //   conversationId: selectedConversation,
-    //   createdAt: Date.now(),
-    // });
-
     setInputValue("");
     try {
       await sentMessage({
@@ -131,7 +122,7 @@ const ConversationForm = () => {
   return (
     <form onSubmit={handleSentMessage} className="relative w-full h-[35px]">
       {isTyping && (
-        <div className="w-[70px] text-center h-[40px] absolute top-[-40px] left-[-150px] flex justify-center items-center">
+        <div className="w-[70px] text-center h-[40px] absolute top-[-40px] left-[0px] flex justify-center items-center">
           <Lottie
             animationData={animationData}
             loop
