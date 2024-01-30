@@ -8,8 +8,7 @@ import { Avatar, Badge, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { CheckCircle } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-// import { useNavigate } from "react-router-dom";
-/*eslint-disable react/prop-types */
+import { socket } from "../socket";
 const SingleContact = ({ conversation, currentUser, setRequest }) => {
   const [friends, setFriends] = useState(null);
   const dispatch = useDispatch();
@@ -22,13 +21,20 @@ const SingleContact = ({ conversation, currentUser, setRequest }) => {
     setFriends(friend);
   }, [conversation, currentUser]);
 
+  const { selectedConversation } = useSelector((state) => state.conversation);
+  const { selectedFriend } = useSelector((state) => state.friend);
+
   const handleClick = (id, friend) => {
     dispatch(selecteConversation(id));
     dispatch(selecteFriend(friend));
+
     setRequest(true);
-    console.log(friend._id);
+
+    if (selectedConversation) {
+      socket?.emit("leaveRoom", selectedConversation);
+    }
+    socket?.emit("joinRoom", id);
   };
-  const { selectedFriend } = useSelector((state) => state.friend);
 
   const formatDate = (createdAt) => {
     const currentDate = moment();

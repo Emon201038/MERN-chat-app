@@ -42,12 +42,6 @@ const socketServer = (io) => {
     const socket_id = socket.id;
 
     if (user_id) {
-      console.log(
-        "new user is online. his socket_id: " +
-          socket_id +
-          "and His user id: " +
-          user_id
-      );
       removeOfflineUser(user_id);
       await User.findByIdAndUpdate(user_id, {
         socket_id: socket_id,
@@ -58,7 +52,6 @@ const socketServer = (io) => {
       io.emit("test_online_users", onlineUsers);
 
       addUser(user_id, socket_id);
-      console.log(users, "testing");
       io.emit("getUsers", users);
     }
 
@@ -69,6 +62,16 @@ const socketServer = (io) => {
         participients: { $in: [user_id] },
       }).populate("participients", "-password");
       io.emit("get_conversations", conversation);
+    });
+
+    socket.on("joinRoom", (roomId) => {
+      socket.join(roomId);
+      console.log(`User joined room ${roomId}`);
+    });
+
+    socket.on("leaveRoom", (roomId) => {
+      socket.leave(roomId);
+      console.log(`User left room ${roomId}`);
     });
 
     socket.on(
@@ -96,7 +99,6 @@ const socketServer = (io) => {
         io.to(user?.socketId).emit("seenMessage", { _id, conversationId });
 
         const receiverProfile = await User.findById(receiverId);
-        console.log(receiverProfile);
 
         if (receiverProfile?.status === "online") {
           const updatedMessage = await OneToOneMessage.findByIdAndUpdate(

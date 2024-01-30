@@ -98,7 +98,6 @@ export const conversationSlice = apiSlice.injectEndpoints({
                 (msg) => msg._id == data._id
               );
               console.log(JSON.stringify(message));
-              console.log(selected);
             });
           });
         }
