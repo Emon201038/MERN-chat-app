@@ -6,6 +6,7 @@ const socketServer = (io) => {
   let users = [];
   let onlineUsers = [];
   let connectedUserOffline = [];
+  let roomUsers = {};
   const addUser = (userId, socketId) => {
     !users.some((usr) => usr.userId === userId) &&
       users.push({ userId, socketId });
@@ -66,13 +67,41 @@ const socketServer = (io) => {
 
     socket.on("joinRoom", (roomId) => {
       socket.join(roomId);
+
       console.log(`User joined room ${roomId}`);
+      updateUsersInRoom(roomId);
+
+      const isExistUserInRoom = roomUsers[roomId]?.findIndex(
+        (user) => user?.userId == user_id
+      );
+      if (isExistUserInRoom !== undefined && isExistUserInRoom !== -1) {
+        roomUsers[roomId][isExistUserInRoom].socketId = socket.id;
+      } else {
+        if (!roomUsers[roomId]) {
+          roomUsers[roomId] = [];
+        }
+        roomUsers[roomId].push({ socketId: socket.id, userId: user_id });
+      }
+      console.log(roomUsers);
     });
 
     socket.on("leaveRoom", (roomId) => {
       socket.leave(roomId);
       console.log(`User left room ${roomId}`);
+      updateUsersInRoom(roomId);
+      if (roomUsers[roomId]) {
+        roomUsers[roomId] = roomUsers[roomId].filter(
+          (user) => user.userId !== user_id
+        );
+      }
+      console.log(roomUsers);
     });
+
+    function updateUsersInRoom(roomId) {
+      const usersInRoom = io.sockets.adapter.rooms.get(roomId);
+      const numUsersInRoom = usersInRoom ? usersInRoom.size : 0;
+      io.to(roomId).emit("numberOfUsers", numUsersInRoom);
+    }
 
     socket.on(
       "sendMessage",
@@ -108,6 +137,19 @@ const socketServer = (io) => {
           );
           io.emit("mark_as_delevered", updatedMessage);
         }
+        const checkRoom = roomUsers[conversationId];
+
+        if (checkRoom) {
+          const online = checkRoom?.find((u) => u?.userId == receiverId);
+          if (online) {
+            const updatedMessage = await OneToOneMessage.findByIdAndUpdate(
+              _id,
+              { messageStatus: "seen" },
+              { new: true, context: "query" }
+            );
+            io.emit("mark_as_seen", updatedMessage);
+          }
+        }
       }
     );
 
@@ -122,6 +164,7 @@ const socketServer = (io) => {
     });
 
     socket.on("disconnect", async () => {
+      removeUserFromAllRooms(socket);
       console.log("User is disconnected, user socket id is :", socket.id);
 
       await User.findByIdAndUpdate(user_id, {
@@ -139,9 +182,19 @@ const socketServer = (io) => {
 
       io.emit("getUsers", users);
       io.emit("offlineUser", connectedUserOffline);
-
-      console.log(users);
     });
+    function removeUserFromAllRooms(socket) {
+      const rooms = Object.keys(socket.rooms);
+      rooms.forEach((roomId) => {
+        if (roomId !== socket.id) {
+          socket.leave(roomId);
+          console.log(`User removed from room ${roomId}`);
+
+          // Update the number of users in the room after the user leaves
+          updateUsersInRoom(roomId);
+        }
+      });
+    }
   });
 };
 

@@ -89,13 +89,16 @@ const Message = ({ msg }) => {
         </div>
         {msg?.sender === user._id && (
           <div>
-            {msg?.messageStatus === "sending" ? (
+            {msg?.messageStatus === "sending" && (
               <CircleOutlined fontSize="8px" />
-            ) : msg?.messageStatus === "sent" ? (
+            )}
+            {msg?.messageStatus === "sent" && (
               <CheckCircleOutline fontSize="8px" />
-            ) : (
+            )}
+            {msg?.messageStatus === "delevered" && (
               <CheckCircle fontSize="8px" />
             )}
+            {msg?.messageStatus === "seen" && <p>s</p>}
           </div>
         )}
         {msg?.receiver === user._id && iconShow && (
