@@ -1,5 +1,5 @@
-const checkUserExists = async (Model, email) => {
-  return await Model.exists({ email: email });
+const checkUserExists = async (Model, field, value) => {
+  return await Model.exists({ [field]: value });
 };
 
 module.exports = checkUserExists;

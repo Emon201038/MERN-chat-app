@@ -20,7 +20,6 @@ import ContactLayout from "../components/contact/ContactLayout";
 
 /*eslint-disable react/prop-types */
 const Contacts = ({ request, setRequest }) => {
-  const [conversations, setConversations] = useState([]);
   const [onlineUser, setOnlineUser] = useState([]);
 
   const { user } = useSelector((state) => state.auth);
@@ -34,10 +33,6 @@ const Contacts = ({ request, setRequest }) => {
       setOnlineUser(data);
     });
   }, [user]);
-
-  useEffect(() => {
-    setConversations(data?.payload?.conversation);
-  }, [data]);
 
   //decide what to render
   let content = null;
@@ -68,7 +63,7 @@ const Contacts = ({ request, setRequest }) => {
   if (!isLoading && !isError && data?.payload?.conversation?.length > 0) {
     content = (
       <>
-        {conversations?.map((c) => (
+        {data?.payload?.conversations?.map((c) => (
           <SingleContact
             conversation={c}
             key={c._id}

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 // import { socket } from "../../layout/Inbox";
 /*eslint-disable react/prop-types */
-const Message = ({ msg }) => {
+const Message = ({ msg, lastMessage }) => {
   const [iconShow, setIconShow] = useState(false);
   const scrollRef = useRef();
   const { selectedFriend } = useSelector((state) => state.friend);
@@ -89,16 +89,29 @@ const Message = ({ msg }) => {
         </div>
         {msg?.sender === user._id && (
           <div>
-            {msg?.messageStatus === "sending" && (
-              <CircleOutlined fontSize="8px" />
-            )}
-            {msg?.messageStatus === "sent" && (
-              <CheckCircleOutline fontSize="8px" />
-            )}
-            {msg?.messageStatus === "delevered" && (
-              <CheckCircle fontSize="8px" />
-            )}
-            {msg?.messageStatus === "seen" && <p>s</p>}
+            {lastMessage?.messageStatus !== "seen" &&
+              msg?.messageStatus === "sending" && (
+                <CircleOutlined fontSize="8px" />
+              )}
+            {lastMessage?.messageStatus !== "seen" &&
+              msg?.messageStatus === "sent" && (
+                <CheckCircleOutline fontSize="8px" />
+              )}
+            {lastMessage?.messageStatus !== "seen" &&
+              msg?.messageStatus === "delevered" && (
+                <CheckCircle fontSize="8px" />
+              )}
+            {lastMessage?.messageStatus === "seen" &&
+              lastMessage?._id === msg?._id &&
+              msg?.messageStatus === "seen" && (
+                <div className="px-1 py-2 mb-5">
+                  <img
+                    src={selectedFriend.image}
+                    className="w-[20px] h-[20px] rounded-full"
+                    alt=""
+                  />
+                </div>
+              )}
           </div>
         )}
         {msg?.receiver === user._id && iconShow && (

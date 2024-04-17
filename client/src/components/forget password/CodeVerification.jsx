@@ -6,9 +6,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import {} from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useVerifyOtpMutation } from "../../features/forget password/forgetPassApi";
+import { useTheme } from "@emotion/react";
 
 /*eslint-disable react/no-unescaped-entities*/
 const CodeVerification = () => {
@@ -17,7 +19,9 @@ const CodeVerification = () => {
     useVerifyOtpMutation();
   const navigate = useNavigate();
   const location = useLocation();
+  const currentTheme = useTheme();
   const user = (location.state && location.state.user) || {};
+  console.log(user);
 
   const handleChange = (e) => {
     setValue(e.target.value.replace(/[^0-9]/g, ""));
@@ -40,7 +44,7 @@ const CodeVerification = () => {
       alignItems="center"
       width="100vw"
       height="100vh"
-      bgcolor="rgb(203,213,225)"
+      bgcolor={currentTheme.palette.mode === "light" && "rgb(203,213,225)"}
     >
       <Stack
         //
@@ -52,7 +56,8 @@ const CodeVerification = () => {
             lg: "35%",
             xl: "35%",
           },
-          bgcolor: "white",
+          bgcolor:
+            currentTheme.palette.mode === "light" ? "white" : "rgba(0,0,0,0.3)",
           borderRadius: "10px",
         }}
       >
@@ -64,7 +69,14 @@ const CodeVerification = () => {
         >
           Enter security code
         </Typography>
-        <Box borderBottom="1px solid lightgray" padding={2}>
+        <Box
+          borderBottom={
+            currentTheme.palette.mode === "light"
+              ? "1px solid lightgray"
+              : "1px solid rgba(255,255,255,0.3)"
+          }
+          padding={2}
+        >
           <Typography>
             Please check your emails for a message with your code. Your code is
             6 numbers long.
@@ -91,7 +103,7 @@ const CodeVerification = () => {
               <Typography variant="body2" marginBottom={1}>
                 We have sent your code to:{" "}
               </Typography>
-              <Typography fontSize="12px">nasim@gmail.com</Typography>
+              <Typography fontSize="12px">{user?.email}</Typography>
             </Box>
           </Stack>
         </Box>
@@ -124,8 +136,8 @@ const CodeVerification = () => {
               </Typography>
             </Button>
             <Button
-              variant="contained"
-              color="primary"
+              variant={currentTheme.palette.mode === "light" && "primary"}
+              // color={currentTheme.palette.mode === "light" && "primary"}
               size="medium"
               onClick={handleSubmit}
               disabled={isLoading}

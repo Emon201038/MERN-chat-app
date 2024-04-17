@@ -2,6 +2,7 @@ const express = require("express");
 const {
   handleLogInUser,
   handleLogOutUser,
+  handleRefreshToken,
 } = require("../controllers/authController");
 const { isLoggedIn, isLoggedOut } = require("../middlewares/auth");
 const { validateUserLogin } = require("../validators/auth");
@@ -17,5 +18,6 @@ authRouter.post(
   handleLogInUser
 );
 authRouter.post("/logout", isLoggedIn, handleLogOutUser);
+authRouter.get("/refresh-token", handleRefreshToken);
 
 module.exports = authRouter;

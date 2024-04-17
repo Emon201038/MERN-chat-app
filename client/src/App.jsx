@@ -24,7 +24,6 @@ import ArchivedMessage from "./components/ArchivedMessage";
 import Calls from "./components/contact/footer contact/Calls";
 import People from "./components/contact/footer contact/People";
 import Stories from "./components/contact/footer contact/Stories";
-import Test from "./components/Test";
 
 function App() {
   const authChecked = useAuthCheck();
@@ -72,7 +71,6 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/test" element={<Test />} />
             <Route
               path="/message-requests"
               exact

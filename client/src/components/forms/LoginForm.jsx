@@ -51,7 +51,6 @@ const LoginForm = () => {
   const { email, password } = formData;
 
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
-  // Your boolean state goes here
 
   // Function to handle snackbar close
   const handleCloseSnackbar = (event, reason) => {

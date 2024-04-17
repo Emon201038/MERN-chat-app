@@ -35,13 +35,6 @@ const SingleContact = ({ conversation, currentUser, setRequest }) => {
     }
     socket?.emit("joinRoom", id);
   };
-  useEffect(() => {
-    socket?.on("numberOfUsers", (data) => console.log(data));
-    return () => {
-      /* cleanup code */
-      socket.off("numberOfUsers");
-    };
-  }, []);
 
   const formatDate = (createdAt) => {
     const currentDate = moment();

@@ -33,7 +33,7 @@ const userSchema = new Schema(
     phone: {
       type: String,
       required: [true, "Phone Number is required"],
-      minLength: [11, "Phone number is must be minimum 11 characters long"],
+      minLength: [8, "Phone number is must be minimum 8 characters long"],
       maxLength: [14, "Phone number is must be maximum 14 characters long"],
     },
     password: {
@@ -45,10 +45,13 @@ const userSchema = new Schema(
         return bcrypt.hashSync(v, bcrypt.genSaltSync(10));
       },
     },
-    socket_id: {
-      type: String,
-    },
     friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    friendRequests: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -67,11 +70,21 @@ const userSchema = new Schema(
       default:
         "https://res.cloudinary.com/emadul-hoque-emon/image/upload/v1698084958/default.jpg",
     },
+    posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
     isLock: {
       type: Boolean,
       default: false,
     },
     isDisable: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
       type: Boolean,
       default: false,
     },

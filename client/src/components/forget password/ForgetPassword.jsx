@@ -35,7 +35,6 @@ const ForgetPassword = () => {
         <Box
           width="100vw"
           height="100vh"
-          bgcolor="rgb(203,213,225)"
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -53,7 +52,7 @@ const ForgetPassword = () => {
                 lg: "60%",
                 xl: "50%",
               },
-              bgcolor: "white",
+
               borderRadius: "8px",
               paddingX: {
                 xs: "10px",
@@ -66,7 +65,7 @@ const ForgetPassword = () => {
             }}
           >
             <form onSubmit={handleSubmit}>
-              <Stack spacing={4} direction="column">
+              <Stack spacing={4} direction="column" c>
                 <Stack spacing={2}>
                   <div className="flex justify-center">
                     <img src={logo} className="w-[40px] h-[40px]" alt="" />
@@ -86,7 +85,6 @@ const ForgetPassword = () => {
                     type="text"
                     name="email"
                     required
-                    value={email}
                     onChange={handleChange}
                   />
                   <Button

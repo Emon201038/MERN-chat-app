@@ -1,14 +1,14 @@
 const createError = require("http-errors");
 const jwt = require("jsonwebtoken");
-const { jwtSecret } = require("../../secret");
+const { jwtRefreshTokenSecret, jwtAccessTokenSecret } = require("../../secret");
 
 const isLoggedIn = (req, res, next) => {
   try {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
-      throw createError(404, "No access token found.please log in");
+      throw createError(401, "No access token found.please log in");
     }
-    const decode = jwt.verify(accessToken, jwtSecret);
+    const decode = jwt.verify(accessToken, jwtAccessTokenSecret);
     if (!decode) {
       throw createError(404, "cannot decode user.");
     }

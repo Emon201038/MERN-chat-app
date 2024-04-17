@@ -1,24 +1,57 @@
 const multer = require("multer");
-const { maxFileSize, allowedFileTypes } = require("../../secret");
+const {
+  ALLOWED_POST_FILE_TYPE,
+  UPLOAD_USER_IMAGE_DIRECTORY,
+  UPLOAD_POST_FILE_DIRECTORY,
+  ALLOWED_PROFILE_IMAGE_TYPE,
+  MAX_VIDEO_FILE_SIZE,
+  MAX_IMAGE_FILE_SIZE,
+} = require("../configs");
 
-const storage = multer.memoryStorage();
+const profileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, UPLOAD_USER_IMAGE_DIRECTORY);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
-const fileFilter = (req, file, cb) => {
-  if (!file.mimetype.startsWith("image/")) {
-    cb(new Error("File type is not allowed"), false);
-  }
-  if (file.size > maxFileSize) {
-    cb(new Error("File size exceeds maximum allowed size"), false);
-  }
-  if (!allowedFileTypes.includes(file.mimetype)) {
-    cb(new Error("File type not allowed"), false);
+const profileFileFilter = (req, file, cb) => {
+  if (!ALLOWED_PROFILE_IMAGE_TYPE.includes(file.mimetype)) {
+    return cb(new Error("File type is not allowed"), false);
   }
   cb(null, true);
 };
 
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
+const postStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, UPLOAD_POST_FILE_DIRECTORY);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
-module.exports = upload;
+const postFileFilter = (req, file, cb) => {
+  if (!ALLOWED_POST_FILE_TYPE.includes(file.mimetype)) {
+    return cb(new Error("File type is not allowed"), false);
+  }
+  cb(null, true);
+};
+
+const profileUpload = multer({
+  storage: profileStorage,
+  fileFilter: profileFileFilter,
+  limits: {
+    fileSize: MAX_IMAGE_FILE_SIZE,
+  },
+});
+
+const postUpload = multer({
+  storage: postStorage,
+  fileFilter: postFileFilter,
+  limits: { fileSize: MAX_VIDEO_FILE_SIZE },
+});
+
+module.exports = { postUpload, profileUpload };

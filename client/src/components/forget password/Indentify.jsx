@@ -1,8 +1,10 @@
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
 /*eslint-disable react/prop-types*/
 const Indentify = ({ onBack, users }) => {
+  const currentTheme = useTheme();
   const navigate = useNavigate();
   const handleBack = () => {
     onBack();
@@ -16,13 +18,14 @@ const Indentify = ({ onBack, users }) => {
     <Box
       width="100vw"
       height="100vh"
-      bgcolor="rgb(203,213,225)"
+      bgcolor={currentTheme.palette.mode === "light" && "rgb(203,213,225)"}
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
       <Stack
         alignItems="center"
         sx={{
-          bgcolor: "white",
+          bgcolor:
+            currentTheme.palette.mode === "light" ? "white" : "rgba(0,0,0,0.1)",
           borderRadius: "8px",
           padding: "20px",
         }}
@@ -51,7 +54,10 @@ const Indentify = ({ onBack, users }) => {
                   </Stack>
                   <Button
                     sx={{
-                      backgroundColor: "rgb(203,213,225)",
+                      backgroundColor:
+                        currentTheme.palette.mode === "light"
+                          ? "rgb(203,213,225)"
+                          : "rgba(25,25,225,0.6)",
                       paddingX: "5px",
                     }}
                     size="small"
@@ -69,7 +75,8 @@ const Indentify = ({ onBack, users }) => {
                 sx={{
                   width: "20%",
                   height: "30px",
-                  backgroundColor: "rgb(203,213,225)",
+                  backgroundColor:
+                    currentTheme.palette.mode === "light" && "rgb(203,213,225)",
                 }}
                 color="inherit"
                 onClick={handleBack}

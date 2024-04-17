@@ -9,13 +9,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import {} from "@mui/material/styles";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSentOtpMutation } from "../../features/forget password/forgetPassApi";
+import { useTheme } from "@emotion/react";
 
 const Confirmation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const currentTheme = useTheme();
   const user = (location.state && location.state.selectedUser) || {};
   const [value, setValue] = useState("code");
 
@@ -44,7 +47,7 @@ const Confirmation = () => {
       alignItems="center"
       width="100vw"
       height="100vh"
-      bgcolor="rgb(203,213,225)"
+      bgcolor={currentTheme.palette.mode === "light" && "rgb(203,213,225)"}
     >
       <Stack
         sx={{
@@ -55,13 +58,18 @@ const Confirmation = () => {
             lg: "35%",
             xl: "35%",
           },
-          bgcolor: "white",
+          bgcolor:
+            currentTheme.palette.mode === "light" ? "white" : "rgba(0,0,0,0.1)",
           borderRadius: "10px",
         }}
       >
         <Typography
           padding="20px"
-          borderBottom="1px solid lightgray"
+          borderBottom={
+            currentTheme.palette.mode === "light"
+              ? "1px solid lightgray"
+              : "1px solid rgba(255,255,255,0.3)"
+          }
           fontWeight={600}
           fontSize={20}
         >
@@ -71,7 +79,11 @@ const Confirmation = () => {
           width="100%"
           direction="row"
           justifyContent="space-between"
-          borderBottom="1px solid lightgray"
+          borderBottom={
+            currentTheme.palette.mode === "light"
+              ? "1px solid lightgray"
+              : "1px solid rgba(255,255,255,0.3)"
+          }
         >
           <Stack width="60%" padding="20px" spacing={2}>
             <Typography>

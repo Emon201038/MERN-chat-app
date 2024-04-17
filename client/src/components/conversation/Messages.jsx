@@ -89,6 +89,9 @@ const Messages = () => {
     content = <Alert severity="info">This is an error message!</Alert>;
   }
   if (!isLoading && !isError && data?.payload?.messages?.length > 0) {
+    const lastMessage =
+      data?.payload?.messages[data?.payload?.messages?.length - 1];
+    console.log(lastMessage);
     content = (
       <div
         className={`conversations-container h-[calc(100%_ - _120px)] relative  flex flex-col-reverse ${
@@ -116,7 +119,13 @@ const Messages = () => {
           <SimpleBarStyle timeout={500} autoHide={500}>
             <ul className="flex flex-col  h-full justify-end p-3">
               {data?.payload?.messages?.map((msg) => {
-                return <Message key={msg?.createdAt} msg={msg} />;
+                return (
+                  <Message
+                    key={msg?.createdAt}
+                    msg={msg}
+                    lastMessage={lastMessage}
+                  />
+                );
               })}
             </ul>
           </SimpleBarStyle>

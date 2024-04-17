@@ -18,14 +18,14 @@ const {
 } = require("../validators/auth");
 const runvalidation = require("../validators");
 const { isLoggedIn, isLoggedOut } = require("../middlewares/auth");
-const upload = require("../middlewares/uploadImage");
+const { profileUpload } = require("../middlewares/uploadImage");
 
 const userRouter = express.Router();
 
 userRouter.post(
   "/process-register",
   isLoggedOut,
-  upload.single("image"),
+  profileUpload.single("image"),
   validateUserRegistration,
   runvalidation,
   handleProcessRegister
@@ -33,20 +33,20 @@ userRouter.post(
 
 userRouter.post(
   "/activate",
+  isLoggedOut,
   validateUserVerify,
   runvalidation,
-  isLoggedOut,
   handleActivateUser
 );
 
-userRouter.put("/:id", isLoggedIn, handleEditUser);
+userRouter.put("/:id([0-9a-fA-F]{24})", isLoggedIn, handleEditUser);
 
 // GET ---> localhost:3001/api/users
 userRouter.get("/", isLoggedIn, handleGetUsers);
 
 userRouter.post("/search-user", handleSearchUser);
 
-userRouter.get("/:id", handleGetUser);
+userRouter.get("/:id([0-9a-fA-F]{24})", handleGetUser);
 
 userRouter.post(
   "/forget-password",

@@ -13,7 +13,10 @@ export const useTheme = () => {
 
 const ThemeProvider = ({ children }) => {
   const storedTheme = localStorage.getItem("appTheme");
-  const initialTheme = storedTheme ? JSON.parse(storedTheme) : "light";
+  if (!storedTheme) {
+    localStorage.setItem("appTheme", JSON.stringify("dark"));
+  }
+  const initialTheme = JSON.parse(storedTheme);
 
   const [theme, setTheme] = useState(initialTheme);
 

@@ -98,7 +98,11 @@ const Sidebar = () => {
                   width: "45px",
                   height: "45px",
                   bgcolor:
-                    selectedNav?.id === item.id ? "rgb(203 213 225)" : "",
+                    selectedNav?.id === item.id
+                      ? theme.palette.mode === "light"
+                        ? "rgb(203 213 225)"
+                        : "rgba(0,0,0,0.3)"
+                      : "",
                 }}
                 onClick={() => handleSelectIcon(item)}
               >
@@ -113,7 +117,12 @@ const Sidebar = () => {
             width: "45px",
             height: "45px",
             mb: "10px",
-            bgcolor: selectedNav === iconList[4].id ? "rgb(203 213 225)" : "",
+            bgcolor:
+              selectedNav === iconList[4].id
+                ? theme.palette.mode === "light"
+                  ? "rgb(203 213 225)"
+                  : "rgba(0,0,0,0.3)"
+                : "",
           }}
         >
           {iconList[4].icon}

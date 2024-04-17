@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { socket } from "../../socket";
 import { apiSlice } from "../api/apiSlice";
 
@@ -28,9 +27,7 @@ export const conversationSlice = apiSlice.injectEndpoints({
             updateCachedData((draft) => {
               draft?.payload?.conversation?.forEach((conversation) => {
                 const matchedUser = conversation?.participients?.find((u) => {
-                  return (
-                    u._id !== arg && users?.some((usr) => usr.userId == u._id)
-                  );
+                  return users?.some((usr) => usr.userId == u._id);
                 });
                 if (matchedUser) {
                   matchedUser.status = "online";
@@ -67,8 +64,7 @@ export const conversationSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
       async onCacheEntryAdded(arg, { cacheDataLoaded, updateCachedData }) {
-        const data = await cacheDataLoaded;
-        // console.log(JSON.stringify(data));
+        await cacheDataLoaded;
 
         if (socket) {
           socket?.on("getMessage", (data) => {
@@ -92,12 +88,15 @@ export const conversationSlice = apiSlice.injectEndpoints({
               targetedMessage.messageStatus = "delevered";
             });
           });
-          socket?.on("seenMessage", (data) => {
+          socket?.on("mark_as_seen", async (sentData) => {
             updateCachedData((draft) => {
-              const message = draft?.payload?.messages?.find(
-                (msg) => msg._id == data._id
+              const targetedMessage = draft?.payload?.messages?.find(
+                (msg) => msg._id == sentData.sentTime
               );
-              console.log(JSON.stringify(message));
+              targetedMessage.messageStatus = "seen";
+              draft?.payload?.messages?.forEach(
+                (m) => (m.messageStatus = "seen")
+              );
             });
           });
         }
@@ -130,6 +129,21 @@ export const conversationSlice = apiSlice.injectEndpoints({
         } catch (error) {
           console.log(error);
         }
+      },
+      async onCacheEntryAdded(arg, { cacheDataLoaded, updateCachedData }) {
+        await cacheDataLoaded;
+        socket?.on("mark_as_seen", async (sentData) => {
+          updateCachedData((draft) => {
+            const targetedMessage = draft?.payload?.messages?.find(
+              (msg) => msg._id == sentData.sentTime
+            );
+            targetedMessage.messageStatus = "seen";
+            console.log(JSON.stringify(targetedMessage));
+            draft?.payload?.messages?.forEach(
+              (m) => (m.messageStatus = "seen")
+            );
+          });
+        });
       },
     }),
     sentMessage: builder.mutation({

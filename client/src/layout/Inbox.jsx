@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useLogoutMutation } from "../features/auth/authApi";
-import { useNavigate } from "react-router-dom";
 import Contacts from "../pages/Contacts";
 import Conversation from "../pages/Conversation";
 import { connectSocket } from "../socket";
@@ -11,25 +9,7 @@ function Inbox() {
   const [request, setRequest] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
-  const [logout, { data, error }] = useLogoutMutation();
-  const navigate = useNavigate();
   const socket = useRef();
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  useEffect(() => {
-    if (error) {
-      console.log("Some error occurred while logging out");
-    }
-    if (data?.success) {
-      console.log("logged out successfully");
-      navigate("/");
-      localStorage.clear();
-      socket.current?.disconnect();
-    }
-  }, [data, error, navigate]);
 
   const { user: loggedInUser } = useSelector((state) => state.auth);
 
@@ -44,9 +24,11 @@ function Inbox() {
         createdAt: Date.now(),
       });
     });
+    socket.current?.on("offline", (data) => console.log(data));
 
     return () => {
       socket.current.disconnect();
+      socket.current?.off("disconnect");
     };
   }, [loggedInUser]);
 
@@ -63,34 +45,6 @@ function Inbox() {
         arrivalMessage={arrivalMessage}
       />
     </Layout>
-    // <div className="flex w-[100vw]  h-[100vh] overflow-hidden">
-    //   <Hidden smDown>
-    //     <Sidebar />
-    //   </Hidden>
-    //   <Contacts
-    //     setIsFriendModalOpen={setIsFriendModalOpen}
-    //     request={request}
-    //     setRequest={setRequest}
-    //     arrivalMessage={arrivalMessage}
-    //   />
-    //   <Conversation
-    //     request={request}
-    //     socket={socket}
-    //     arrivalMessage={arrivalMessage}
-    //   />
-
-    //   {/* {isModalOpen && (
-    //     <ProfileModal
-    //       setIsModalOpen={setIsModalOpen}
-    //       handleLogout={handleLogout}
-    //       request={request}
-    //       setRequest={setRequest}
-    //     /> */}
-    //   {/* )} */}
-    //   {isFriendModalOpen && (
-    //     <FriendsModal setIsFriendModalOpen={setIsFriendModalOpen} />
-    //   )}
-    // </div>
   );
 }
 

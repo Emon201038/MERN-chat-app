@@ -8,12 +8,20 @@ const {
   jsonWebToken,
   jsonWebTokenNoTimeOut,
 } = require("../helper/jsonWebToken");
-const { jwtSecret, clientUrl, jwtResetPasswordKey } = require("../../secret");
+const {
+  jwtSecret,
+  clientUrl,
+  jwtResetPasswordKey,
+  jwtAccessTokenSecret,
+} = require("../../secret");
 const checkUserExists = require("../helper/checkUserExists");
 const { query } = require("express");
 const { sendEmailWithNodeMailer } = require("../helper/email");
 const { emailTemplate } = require("../templates/emailTemplate");
-const { accessTokenCookie } = require("../helper/cookie");
+const {
+  setAccessTokenCookie,
+  setRefreshTokenCookie,
+} = require("../helper/cookie");
 const Otp = require("../models/otpModel");
 const otpTemplate = require("../templates/otpTemplate");
 
@@ -37,7 +45,8 @@ const handleGetUsers = async (req, res, next) => {
     const allUser = await User.find(searchFilter)
       .populate("friends")
       .limit(limit)
-      .skip((page - 1) * limit);
+      .skip((page - 1) * limit)
+      .select("-password");
     if (!allUser) {
       throw createError(404, "User not found");
     }
@@ -118,7 +127,7 @@ const handleProcessRegister = async (req, res, next) => {
   try {
     const { firstName, lastName, phone, email, image, password } = req.body;
 
-    const userExists = await checkUserExists(User, email);
+    const userExists = await checkUserExists(User, "email", email);
     if (userExists) {
       throw createError(
         409,
@@ -185,7 +194,21 @@ const handleActivateUser = async (req, res, next) => {
 
       const newUser = await User.create(decoded);
       // const newUserToken = jsonWebTokenNoTimeOut(decoded, jwtSecret);
-      // accessTokenCookie(res, newUserToken);
+      const accessToken = jsonWebToken(
+        { user: newUser },
+        jwtAccessTokenSecret,
+        "15m"
+      );
+      const refreshToken = jsonWebToken(
+        { user: newUser },
+        jwtAccessTokenSecret,
+        "7d"
+      );
+
+      //set cookies
+      setAccessTokenCookie(res, accessToken);
+      setRefreshTokenCookie(res, refreshToken);
+
       return successResponse(res, {
         statusCode: 200,
         message: "New user has been activated",

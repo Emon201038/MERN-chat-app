@@ -82,7 +82,6 @@ const socketServer = (io) => {
         }
         roomUsers[roomId].push({ socketId: socket.id, userId: user_id });
       }
-      console.log(roomUsers);
     });
 
     socket.on("leaveRoom", (roomId) => {
@@ -166,6 +165,7 @@ const socketServer = (io) => {
     socket.on("disconnect", async () => {
       removeUserFromAllRooms(socket);
       console.log("User is disconnected, user socket id is :", socket.id);
+      console.log(socket.disconnect());
 
       await User.findByIdAndUpdate(user_id, {
         socket_id: "",
@@ -182,6 +182,7 @@ const socketServer = (io) => {
 
       io.emit("getUsers", users);
       io.emit("offlineUser", connectedUserOffline);
+      io.emit("offline", { userId: user_id, socket_id: socket.id });
     });
     function removeUserFromAllRooms(socket) {
       const rooms = Object.keys(socket.rooms);

@@ -9,6 +9,7 @@ const authRouter = require("./src/routes/authRouter");
 const { cookie } = require("express-validator");
 const friendRequestRouter = require("./src/routes/friendsRouter");
 const messagesRouter = require("./src/routes/messagesRouter");
+const postRouter = require("./src/routes/postRouter");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 
 app.use("/api/users", userRouter);
 app.use("/api/user", authRouter);
+app.use("/api/posts", postRouter);
 app.use("/api/friends", friendRequestRouter);
 app.use("/api/conversation", messagesRouter);
 
