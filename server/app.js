@@ -10,6 +10,7 @@ const { cookie } = require("express-validator");
 const friendRequestRouter = require("./src/routes/friendsRouter");
 const messagesRouter = require("./src/routes/messagesRouter");
 const postRouter = require("./src/routes/postRouter");
+const commentRouter = require("./src/routes/commentRoute");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(
 app.use("/api/users", userRouter);
 app.use("/api/user", authRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/comments", commentRouter);
 app.use("/api/friends", friendRequestRouter);
 app.use("/api/conversation", messagesRouter);
 

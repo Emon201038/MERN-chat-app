@@ -19,11 +19,16 @@ const validatePostReaction = [
     .withMessage("React must be one of: like, love, care, wow, sad, angry"),
 ];
 
-const validateDeleteComment = [
-  body("postId").isMongoId().withMessage("Post ID must be a valid MongoDB ID"),
-  body("commentId")
+const validateComment = [
+  body("postId")
+    .notEmpty()
+    .withMessage("Post id is required")
     .isMongoId()
     .withMessage("Post ID must be a valid MongoDB ID"),
 ];
 
-module.exports = { validatePost, validatePostReaction, validateDeleteComment };
+module.exports = {
+  validatePost,
+  validatePostReaction,
+  validateComment,
+};

@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const PostSchema = Schema(
+const PostSchema = new Schema(
   {
     reactions: [
       {
@@ -12,37 +12,6 @@ const PostSchema = Schema(
           type: Schema.Types.ObjectId,
           ref: "User",
         },
-      },
-    ],
-    comments: [
-      {
-        comment: {
-          text: {
-            type: String,
-          },
-          image: {
-            type: String,
-          },
-          video: {
-            type: String,
-          },
-        },
-        user: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-        reactions: [
-          {
-            react: {
-              type: String,
-              enum: ["like", "love", "care", "wow", "sad", "angry"],
-            },
-            user: {
-              type: Schema.Types.ObjectId,
-              ref: "User",
-            },
-          },
-        ],
       },
     ],
     content: {

@@ -1,19 +1,13 @@
 const express = require("express");
-const {
-  validatePost,
-  validatePostReaction,
-  validateDeleteComment,
-} = require("../validators/posts");
+const { validatePost, validatePostReaction } = require("../validators/posts");
 const runvalidation = require("../validators");
 const {
   handleGetPosts,
   handleCreatePost,
   handleGetPostById,
   handleDeletePost,
-  handleCreateComment,
   handleEditPost,
   handleAddReactionToPost,
-  handleDeleteComment,
 } = require("../controllers/postController");
 const { isLoggedIn } = require("../middlewares/auth");
 const { postUpload } = require("../middlewares/uploadImage");
@@ -41,18 +35,6 @@ postRouter.get("/:id([0-9a-fA-F]{24})", isLoggedIn, handleEditPost);
 
 // DELETE --> http://localhost:3001/api/posts/:id
 postRouter.delete("/:id([0-9a-fA-F]{24})", isLoggedIn, handleDeletePost);
-
-// PUT --> http://localhost:3001/api/posts/add-comment:id
-postRouter.put("/add-comment", isLoggedIn, handleCreateComment);
-
-// PUT --> http://localhost:3001/api/posts/add-comment:id
-postRouter.delete(
-  "/delete-comment",
-  isLoggedIn,
-  validateDeleteComment,
-  runvalidation,
-  handleDeleteComment
-);
 
 // PUT --> http://localhost:3001/api/posts/toggle-reaction:id
 postRouter.put(
